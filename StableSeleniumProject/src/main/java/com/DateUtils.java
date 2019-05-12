@@ -1,5 +1,6 @@
 package com;
 
-public class DateUtils {
+public final class DateUtils {
 
+	private DateUtils() {}
 }
