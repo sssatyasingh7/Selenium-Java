@@ -459,7 +459,7 @@ public final class DateUtils {
 	 * @param comparableDate
 	 * @return
 	 */
-	public static final boolean isDateWquals(String dateFormat, String actualDate, String comparableDate) {
+	public static final boolean isDateEquals(String dateFormat, String actualDate, String comparableDate) {
 		try {
 			DateFormat df = new SimpleDateFormat(dateFormat);
 			return isDateEquals(df.parse(actualDate), df.parse(comparableDate));

@@ -9,9 +9,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.imageio.ImageIO;
 
@@ -236,5 +238,46 @@ public final class CommonUtils {
 	 */
 	public static final String returnStringValue(String inputString) {
 		return inputString == null ? null : inputString.trim().length() == 0 ? null : inputString.trim();
+	}
+
+	public static final Map<String, String> jsonStringToMap(String jsonString) {
+		Map<String, String> map = new HashMap<String, String>();
+		if (jsonString.startsWith("{")) {
+			jsonString = jsonString.substring(1);
+		}
+		if (jsonString.endsWith("}")) {
+			jsonString = jsonString.substring(0, jsonString.length() - 1).trim();
+		}
+		if (jsonString != null) {
+			getListOfCommaSaperatedWords(jsonString).parallelStream().forEachOrdered(str -> {
+				str = str.trim();
+				String key = str.substring(1, str.indexOf(":") - 1);
+				String value = str.substring(str.indexOf(":") + 2, str.length() - 1);
+				map.put(key, value);
+			});
+		}
+		return map;
+	}
+
+	/**
+	 * Merge Two Map (Merger Map will be merged into Merger Map, if key already
+	 * exist in merger map, then it will update the value for that key)
+	 * 
+	 * @param <K>
+	 * @param <V>
+	 * @param mergerMap
+	 * @param mergedMap
+	 * @return
+	 */
+	public static final <K, V> Map<K, V> mergeMap(Map<K, V> mergerMap, Map<K, V> mergedMap) {
+		Set<K> jsonKeySet = mergerMap.keySet();
+		mergedMap.keySet().parallelStream().forEachOrdered(key -> {
+			if (jsonKeySet.contains(key)) {
+				mergerMap.replace(key, mergedMap.get(key));
+			} else {
+				mergerMap.put(key, mergedMap.get(key));
+			}
+		});
+		return mergerMap;
 	}
 }

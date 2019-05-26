@@ -5,8 +5,6 @@ import static io.restassured.RestAssured.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -41,16 +39,16 @@ public final class RestApiUtils {
 	 * @return JSONObject
 	 */
 	private static final String jsonManipulation(String jsonFilePath, Map<String, String> keyValuePairs) {
-		JSONObject json = parseToJSONObject(FileHelperUtils.readFileAsString(jsonFilePath));
-		for (Entry<String, String> pair : keyValuePairs.entrySet()) {
-			String fieldKey = pair.getKey();
-			if (json.containsKey(fieldKey)) {
-				json.replace(fieldKey, pair.getValue());
-			} else {
-				json.put(fieldKey, pair.getValue());
-			}
-		}
-		return json.toString();
+		/*
+		 * JSONObject json =
+		 * parseToJSONObject(FileHelperUtils.readFileAsString(jsonFilePath)); for
+		 * (Entry<String, String> pair : keyValuePairs.entrySet()) { String fieldKey =
+		 * pair.getKey(); if (json.containsKey(fieldKey)) { json.replace(fieldKey,
+		 * pair.getValue()); } else { json.put(fieldKey, pair.getValue()); } } return
+		 * json.toString();
+		 */
+		return CommonUtils.mapToJsonString(CommonUtils
+				.mergeMap(CommonUtils.jsonStringToMap(FileHelperUtils.readFileAsString(jsonFilePath)), keyValuePairs));
 	}
 
 	/**
@@ -75,9 +73,24 @@ public final class RestApiUtils {
 	 * @return Response
 	 */
 	public static final Response postRequest(String urlValue, String userName, String password, String jsonFilePath,
-			Map<String, String> map) {
+			final Map<String, String> map) {
 		Response response = given().contentType(ContentType.JSON).auth().basic(userName, password).request()
 				.body(jsonManipulation(jsonFilePath, map)).when().post(urlValue);
+		return response.getStatusCode() == 201 ? response : null;
+	}
+
+	/**
+	 * 
+	 * @param urlValue
+	 * @param userName
+	 * @param password
+	 * @param map
+	 * @return
+	 */
+	public static final Response postRequest(String urlValue, String userName, String password,
+			final Map<String, String> map) {
+		Response response = given().contentType(ContentType.JSON).auth().basic(userName, password).request()
+				.body(CommonUtils.mapToJsonString(map)).when().post(urlValue);
 		return response.getStatusCode() == 201 ? response : null;
 	}
 
@@ -180,5 +193,11 @@ public final class RestApiUtils {
 			});
 		}
 		return list;
+	}
+
+	public static final void postTextFile(String url, String userName, String password, String fileName,
+			String message) {
+		given().contentType(ContentType.TEXT).auth().basic(userName, password).body(message).when()
+				.post(String.format("%s&file_name=%s", url, fileName));
 	}
 }
