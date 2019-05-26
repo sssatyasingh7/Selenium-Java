@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.io.FileUtils;
 
 public class FileHelperUtils {
@@ -204,5 +207,10 @@ public class FileHelperUtils {
 			}
 		}
 		return fileName;
+	}
+	
+	public static final <V, K> Map<K, Set<V>> getKeyValuePairsFromExcel(String filePath, String sheetName, int keyCoulmnNum, int valueColumnNum){
+		return null;
+		
 	}
 }
