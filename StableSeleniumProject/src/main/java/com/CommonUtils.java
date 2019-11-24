@@ -13,8 +13,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
+
 import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -75,11 +78,11 @@ public final class CommonUtils {
 	public static final String returnValue(String stringValue) {
 		return stringValue == null ? null : stringValue.trim().isEmpty() ? null : stringValue.trim();
 	}
-	
+
 	public static final Object returnValue(Object objectValue) {
-		return (objectValue == null || objectValue =="") ? null :objectValue;
+		return (objectValue == null || objectValue == "") ? null : objectValue;
 	}
-	
+
 	public static final boolean isNotNull(Object objectValue) {
 		return returnValue(objectValue) != null;
 	}
@@ -126,23 +129,23 @@ public final class CommonUtils {
 	public static final boolean compareContains(String stringContains, String containsString) {
 		return isNotNull(stringContains) && isNotNull(containsString) && stringContains.contains(containsString);
 	}
-	
-	
+
 	public static final boolean compareContains(List<String> stringContains, String containsString) {
 		return isListNotEmpty(stringContains) && isNotNull(containsString) && stringContains.contains(containsString);
 	}
+
 	public static final boolean compareEquals(Object object1, Object object2) {
 		return isNotNull(object1) && isNotNull(object2) && object1 == object2;
 	}
-	
+
 	public static final <K, V> boolean compareEquals(Map<K, V> map1, Map<K, V> map2) {
 		return isMapNotEmpty(map1) && isMapNotEmpty(map2) && map1.equals(map2);
 	}
-	
+
 	public static final boolean compareEqualsIgnoreCase(String string1, String string2) {
 		return isNotNull(string1) && isNotNull(string2) && string1.equalsIgnoreCase(string2);
 	}
-	
+
 //	public static final int compareCompareIgnoreCase(String string1, String string2) {
 //		return isNotNull(string1) && isNotNull(string2) && string1.compareToIgnoreCase(string2);
 //	}
@@ -204,9 +207,9 @@ public final class CommonUtils {
 			return false;
 		}
 	}
-	
-	public static final List<String> getListOfCommaSaperatedWords(String string){
-		return isNotNull(string)?Arrays.asList(string.split(",")) : new ArrayList<>();
+
+	public static final List<String> getListOfCommaSaperatedWords(String string) {
+		return isNotNull(string) ? Arrays.asList(string.split(",")) : new ArrayList<>();
 	}
 
 	/**
@@ -260,19 +263,19 @@ public final class CommonUtils {
 	}
 
 	/**
-	 * 
+	 * Contains X-Path Operation
 	 * @param inputString
-	 * @return
+	 * @return {@link String}
 	 */
 	public static final String containsTextXpath(String inputString) {
-		String xPath = "[";
-		List<String> words = getListOfBlankSpaceSaperatedWords(inputString);
-		int listSize = words.size();
-		for (int i = 0; i < listSize; i++) {
-			xPath = xPath + String.format("contains(.,'%s')", words.get(i));
-			xPath = i < (listSize - 1) ? xPath + " and " : xPath + "]";
-		}
-		return xPath;
+		return getListOfBlankSpaceSaperatedWords(inputString).stream().filter(Objects::nonNull).collect(Collectors
+				.joining(" and ", "[", "]"));/*
+												 * String xPath = "["; List<String> words =
+												 * getListOfBlankSpaceSaperatedWords(inputString); int listSize =
+												 * words.size(); for (int i = 0; i < listSize; i++) { xPath = xPath +
+												 * String.format("contains(.,'%s')", words.get(i)); xPath = i <
+												 * (listSize - 1) ? xPath + " and " : xPath + "]"; } return xPath;
+												 */
 	}
 
 	/**

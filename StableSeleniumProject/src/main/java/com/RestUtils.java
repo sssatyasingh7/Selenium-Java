@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.testng.Assert;
+
 import static io.restassured.RestAssured.*;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
@@ -21,7 +23,6 @@ public enum RestUtils {
  	 * @param userName
  	 * @param password
  	 * @return {@link Response}
- 	 * @author skuma726
  	 */
  	public final Response getRequest(String url, String userName, String password) {
  		Response response = given().contentType(ContentType.JSON).auth().basic(userName, password).when().get(url);
@@ -34,7 +35,6 @@ public enum RestUtils {
  	 * @param jsonFilePath
  	 * @param keyValuePairs
  	 * @return {@link String}
- 	 * @author skuma726
  	 */
  	private final String jsonManipulation(String jsonFilePath, Map<String, String> keyValuePairs) {
  		return CommonUtils.mapToJsonString(CommonUtils
@@ -51,7 +51,6 @@ public enum RestUtils {
  	 * @param returnField
  	 * @param fieldNameValuePairs
  	 * @return {@link Response}
- 	 * @author skuma726
  	 */
  	public final Response postRequest(String url, String userName, String password, String jsonFilePath,
  			Map<String, String> fieldNameValuePairs) {
@@ -69,7 +68,6 @@ public enum RestUtils {
  	 * @param password
  	 * @param fieldNameValuePairs
  	 * @return {@link Response}
- 	 * @author skuma726
  	 */
  	public final Response postRequest(String url, String userName, String password,
  			final Map<String, String> fieldNameValuePairs) {
@@ -87,7 +85,6 @@ public enum RestUtils {
  	 * @param password
  	 * @param jsonString
  	 * @return {@link Response}
- 	 * @author skuma726
  	 */
  	public final Response postRequest(String url, String userName, String password, String jsonString) {
  		Response response = given().contentType(ContentType.JSON).auth().basic(userName, password).request()
@@ -106,7 +103,6 @@ public enum RestUtils {
  	 * @param returnField
  	 * @param fieldNameValuePairs
  	 * @return {@link Response}
- 	 * @author skuma726
  	 */
  	public final Response putRequest(String url, String userName, String password, String jsonFilePath,
  			Map<String, String> fieldNameValuePairs) {
@@ -124,7 +120,6 @@ public enum RestUtils {
  	 * @param password
  	 * @param fieldNameValuePairs
  	 * @return {@link Response}
- 	 * @author skuma726
  	 */
  	public final Response putRequest(String url, String userName, String password,
  			Map<String, String> fieldNameValuePairs) {
@@ -140,7 +135,6 @@ public enum RestUtils {
  	 * @param password
  	 * @param jsonString
  	 * @return {@link Response}
- 	 * @author skuma726
  	 */
  	public final Response putRequest(String url, String userName, String password, String jsonString) {
  		Response response = given().contentType(ContentType.JSON).auth().basic(userName, password).request()
@@ -154,7 +148,6 @@ public enum RestUtils {
  	 * @param userName
  	 * @param password
  	 * @return {@link Boolean}
- 	 * @author skuma726
  	 */
  	public final boolean deleteRequest(String url, String userName, String password) {
  		int statusCode = given().contentType(ContentType.JSON).auth().basic(userName, password).when().delete(url)
@@ -167,7 +160,6 @@ public enum RestUtils {
  	 * @param response
  	 * @param fieldPath
  	 * @return {@link String}
- 	 * @author skuma726
  	 */
  	public final String getFieldValueFromJSONResponse(Response response, String fieldPath) {
  		try {
@@ -196,7 +188,6 @@ public enum RestUtils {
  	 * @param url
  	 * @param userName
  	 * @param password
- 	 * @author skuma726
  	 */
  	public final void postOperation(String url, String userName, String password) {
  		given().contentType(ContentType.JSON).auth().basic(userName, password).request().when().post(url);

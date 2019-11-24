@@ -6,7 +6,7 @@ import java.util.Map;
 
 import io.restassured.response.Response;
 
-public class getGlideRecordForTable implements RemoteGlideRecord {
+class GlideRecordForTable implements RemoteGlideRecord {
 
 	private String API_URL;
 	private int INIT_COUNT;;
@@ -17,7 +17,7 @@ public class getGlideRecordForTable implements RemoteGlideRecord {
 
 	private static final RestForSNOW rest = new RestForSNOW();
 
-	public getGlideRecordForTable(String tableName) {
+	GlideRecordForTable(String tableName) {
 		this.TABLE_NAME = tableName;
 		this.API_URL = String.format("%s?sysparm_display_value=all", tableName);
 		this.ADD_QUERY = null;
@@ -93,7 +93,7 @@ public class getGlideRecordForTable implements RemoteGlideRecord {
 	}
 
 	private static final String encodedQueryToJsonStringConversion(String encodedQuery) {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		map.put("\\^", ",");
 		map.put("=", ":");
 		map.put("IN", ":");
@@ -151,7 +151,7 @@ public class getGlideRecordForTable implements RemoteGlideRecord {
 
 	@Override
 	public final void deleteListOfRecords(List<String> recordSysId) {
-		recordSysId.forEach(sysId -> deleteRecord(sysId));
+		recordSysId.forEach(this::deleteRecord);
 	}
 
 }
