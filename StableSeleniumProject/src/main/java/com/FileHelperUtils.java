@@ -3,11 +3,14 @@ package com;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 public class FileHelperUtils {
 	private FileHelperUtils() {
@@ -69,7 +72,7 @@ public class FileHelperUtils {
 	 */
 	public static final String filePathFromFolder(String folderPath, String fileName) {
 		String pathName = null;
-		List<File> lst = getListOfFiles(pathName);
+		List<File> lst = getListOfFiles(folderPath);
 		for (File file : lst) {
 			if (file.toString().contains(fileName)) {
 				pathName = file.toString();
@@ -79,12 +82,16 @@ public class FileHelperUtils {
 		return pathName;
 	}
 
+	public static final String getCurrentDirectory() {
+		return System.getProperty("user.dir");
+	}
+
 	/**
 	 * 
 	 * @return String
 	 */
 	public static final String getResourcesFolderPath() {
-		return String.format(System.getProperty("user.dir") + "\\Resources");
+		return getCurrentDirectory() + "\\Resources";
 	}
 
 	/**
@@ -93,7 +100,8 @@ public class FileHelperUtils {
 	 * @return String
 	 */
 	public static final String getResourcesFilePath(String pathName) {
-		return getResourcesFolderPath() + "\\" + pathName;
+		return CommonUtils.isNotNull(pathName) && !pathName.contains("\\") ? getResourcesFolderPath() + "\\" + pathName
+				: pathName;
 	}
 
 	/**
@@ -101,7 +109,7 @@ public class FileHelperUtils {
 	 * @return String
 	 */
 	public static final String getReportFolderPath() {
-		return String.format(System.getProperty("user.dir") + "\\Report");
+		return getCurrentDirectory() + "\\Report";
 	}
 
 	/**
@@ -110,7 +118,8 @@ public class FileHelperUtils {
 	 * @return String
 	 */
 	public static final String getReportFilePath(String pathName) {
-		return getReportFolderPath() + "\\" + pathName;
+		return CommonUtils.isNotNull(pathName) && !pathName.contains("\\") ? getReportFolderPath() + "\\" + pathName
+				: pathName;
 	}
 
 	/**
@@ -208,9 +217,23 @@ public class FileHelperUtils {
 		}
 		return fileName;
 	}
-	
-	public static final <V, K> Map<K, Set<V>> getKeyValuePairsFromExcel(String filePath, String sheetName, int keyCoulmnNum, int valueColumnNum){
-		return null;
-		
+
+	public static final Map<String, Set<String>> getKeyValuePairsFromExcel(String filePath, String sheetNameOrNum,
+			int initialRowNum, int keyCoulmnNum, int valueColumnNum) {
+		ExcelUtils excel = new ExcelUtils();
+		Map<String, Set<String>> map = new HashMap<>();
+		XSSFSheet sheet = excel.getWorksheetInstance(filePath, sheetNameOrNum);
+		if (CommonUtils.isNotNull(sheet)) {
+			for (int i = initialRowNum; i < sheet.getLastRowNum(); i++) {
+				Object keyObj = excel.getCellValue(sheet, i, keyCoulmnNum);
+				Object valObj = excel.getCellValue(sheet, i, valueColumnNum);
+				String key = CommonUtils.isNotNull(keyObj) ? (String) keyObj : null;
+				if (!map.containsKey(key))
+					map.put(key, new HashSet<>());
+				map.get(key).add(CommonUtils.isNotNull(valObj) ? (String) valObj : null);
+			}
+		}
+		return map;
+
 	}
 }

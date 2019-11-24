@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.xml.bind.DatatypeConverter;
 
+import org.testng.Assert;
+
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
@@ -22,7 +24,7 @@ public final class ReportUtils {
 	private static final String SCREENSHOT_PATH = REPORT_DIR_PATH + "\\screenshot.png";
 	private static ExtentTest LOGGER;
 	private static ReportUtils REPORT_UTILS;
-	//private static final SeleniumUtils SELENIUM_UTILS = new SeleniumUtils();
+	// private static final SeleniumUtils SELENIUM_UTILS = new SeleniumUtils();
 	private static String LOGGER_TEST_FILE_PATH;
 	private static final List<String> TEST_CASES = new ArrayList<String>();
 
@@ -269,4 +271,29 @@ public final class ReportUtils {
 		writeLogsToLoggerFile("*** ERROR.LOGS::\n" + errors + "\n***\n");
 	}
 
+	public final void assertPass(final String methodName, Object message, Object actual, Object expected) {
+		setPassLogs(methodName + "Operation" + message, actual, expected, false);
+	}
+
+	public final <E> void assertPass(final String methodName, Object message, List<E> actual, List<E> expected) {
+		setPassLogs(methodName + "Operation" + message, actual, expected, false);
+	}
+
+	public final void assertFail(final String methodName, String message, Object actual, Object expected) {
+		setFailLogs(methodName + "Operation" + message, actual, expected, true);
+		message = methodName + "Operation" + message;
+		if (CommonUtils.isNull(actual) && CommonUtils.isNull(expected))
+			Assert.fail(message);
+		else
+			Assert.fail(message + "\nAct. Val. is:: " + actual + "\nExp. Val. is:: " + expected);
+	}
+	
+	public final <E> void assertFail(final String methodName, String message, List<E> actual, List<E> expected) {
+		setFailLogs(methodName + "Operation" + message, actual, expected, true);
+		message = methodName + "Operation" + message;
+		if (CommonUtils.isListEmpty(actual) && CommonUtils.isListEmpty(expected))
+			Assert.fail(message);
+		else
+			Assert.fail(message + "\nAct. Val. is:: " + actual + "\nExp. Val. is:: " + expected);
+	}
 }

@@ -11,7 +11,7 @@ public class SeleniumUtils implements Form{
 	private static TestEnvironment testEnv;
 	
 	private SeleniumUtils() {
-		testEnv = TestEnvironment.getInstance();
+		testEnv = TestEnvironment.INSTANCE;
 	}
 	
 	public static final SeleniumUtils getInstance() {

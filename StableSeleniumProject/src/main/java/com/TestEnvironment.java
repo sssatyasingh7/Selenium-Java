@@ -6,10 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
-public class TestEnvironment {
-
-	private static TestEnvironment testEnv;
-	private static final Properties properties = new Properties();
+enum TestEnvironment {
+INSTANCE;
+	//private static TestEnvironment testEnv;
+	private final Properties properties = new Properties();
 
 	private TestEnvironment() {
 		try (FileInputStream fis = new FileInputStream(new File("configure.properties"))) {
@@ -21,12 +21,10 @@ public class TestEnvironment {
 		}
 	}
 
-	public static final TestEnvironment getInstance() {
-		if (testEnv == null) {
-			testEnv = new TestEnvironment();
-		}
-		return testEnv;
-	}
+	/*
+	 * public static final TestEnvironment getInstance() { if (testEnv == null) {
+	 * testEnv = new TestEnvironment(); } return testEnv; }
+	 */
 
 	public final String getPropertiesValue(String key, String defaultValue) {
 		return properties.getProperty(key, defaultValue);

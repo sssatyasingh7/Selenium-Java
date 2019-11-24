@@ -219,7 +219,7 @@ public final class CommonUtils {
 	 * @return List<String>
 	 */
 	public static final List<String> getListOfSpecialCharacterSaperatedWords(String inputString, String specialChar) {
-		return isNotNull(inputString) ? Arrays.asList(inputString.split(specialChar)) : new ArrayList<String>();
+		return isNotNull(inputString) ? Arrays.asList(inputString.split(specialChar)) : new ArrayList<>();
 	}
 
 	/**
@@ -249,7 +249,9 @@ public final class CommonUtils {
 	 */
 	public static final String replaceAllCharWithOtherChar(String inputString, String replacableChar,
 			String replacedChar) {
-		return inputString.replaceAll(replacableChar, replacedChar);
+		return isNotNull(inputString) && inputString.contains(replacableChar)
+				? inputString.replaceAll(replacableChar, replacedChar)
+				: inputString;
 	}
 
 	/**
@@ -264,18 +266,14 @@ public final class CommonUtils {
 
 	/**
 	 * Contains X-Path Operation
+	 * 
 	 * @param inputString
 	 * @return {@link String}
 	 */
 	public static final String containsTextXpath(String inputString) {
-		return getListOfBlankSpaceSaperatedWords(inputString).stream().filter(Objects::nonNull).collect(Collectors
-				.joining(" and ", "[", "]"));/*
-												 * String xPath = "["; List<String> words =
-												 * getListOfBlankSpaceSaperatedWords(inputString); int listSize =
-												 * words.size(); for (int i = 0; i < listSize; i++) { xPath = xPath +
-												 * String.format("contains(.,'%s')", words.get(i)); xPath = i <
-												 * (listSize - 1) ? xPath + " and " : xPath + "]"; } return xPath;
-												 */
+		return getListOfBlankSpaceSaperatedWords(inputString).stream().filter(Objects::nonNull)
+				.map(textVal -> String.format("contains(.,'%s')", textVal))
+				.collect(Collectors.joining(" and ", "[", "]"));
 	}
 
 	/**
@@ -285,10 +283,14 @@ public final class CommonUtils {
 	 * @return String
 	 */
 	public static final String stringToJsonString(String inputString, final Map<String, String> map) {
-		for (String key : map.keySet()) {
-			inputString = replaceAllCharWithOtherChar(inputString, key, String.format("\"%s\"", map.get(key)));
-		}
-		return "{\"" + inputString + "\"}";
+		return map.keySet().stream()
+				.map(key -> replaceAllCharWithOtherChar(inputString, key, String.format("\"%s\"", map.get(key))))
+				.collect(Collectors.joining("", "{\"", "\"}"));
+		/*
+		 * for (String key : map.keySet()) { inputString =
+		 * replaceAllCharWithOtherChar(inputString, key, String.format("\"%s\"",
+		 * map.get(key))); } return "{\"" + inputString + "\"}";
+		 */
 	}
 
 	/**
@@ -297,14 +299,15 @@ public final class CommonUtils {
 	 * @return String
 	 */
 	public static final String mapToJsonString(final Map<String, String> map) {
-		String jsonString = "{";
-		List<String> lst = new ArrayList<String>(map.keySet());
-		int lstSize = lst.size();
-		for (int i = 0; i < lstSize; i++) {
-			jsonString = jsonString + String.format("\"%s\":\"%s\"", lst.get(i), map.get(lst.get(i)));
-			jsonString = i < (lstSize - 1) ? jsonString + "," : jsonString + "}";
-		}
-		return jsonString;
+		return map.keySet().stream().map(key -> String.format("\"%s\":\"%s\"", key, map.get(key)))
+				.collect(Collectors.joining(",", "{", "}"));
+		/*
+		 * String jsonString = "{"; List<String> lst = new ArrayList<>(map.keySet());
+		 * int lstSize = lst.size(); for (int i = 0; i < lstSize; i++) { jsonString =
+		 * jsonString + String.format("\"%s\":\"%s\"", lst.get(i), map.get(lst.get(i)));
+		 * jsonString = i < (lstSize - 1) ? jsonString + "," : jsonString + "}"; }
+		 * return jsonString;
+		 */
 	}
 
 	/**
@@ -312,9 +315,11 @@ public final class CommonUtils {
 	 * @param inputString
 	 * @return String
 	 */
-	public static final String returnStringValue(String inputString) {
-		return inputString == null ? null : inputString.trim().length() == 0 ? null : inputString.trim();
-	}
+	/*
+	 * public static final String returnValue(String inputString) { return
+	 * inputString == null ? null : inputString.trim().length() == 0 ? null :
+	 * inputString.trim(); }
+	 */
 
 	public static final Map<String, String> jsonStringToMap(String jsonString) {
 		Map<String, String> map = new HashMap<String, String>();
@@ -325,7 +330,7 @@ public final class CommonUtils {
 			jsonString = jsonString.substring(0, jsonString.length() - 1).trim();
 		}
 		if (jsonString != null) {
-			getListOfCommaSaperatedWords(jsonString).parallelStream().forEachOrdered(str -> {
+			getListOfCommaSaperatedWords(jsonString).stream().forEachOrdered(str -> {
 				str = str.trim();
 				String key = str.substring(1, str.indexOf(":") - 1);
 				String value = str.substring(str.indexOf(":") + 2, str.length() - 1);
@@ -355,5 +360,32 @@ public final class CommonUtils {
 			}
 		});
 		return mergerMap;
+	}
+
+	public static final List<String> splitStringBasedOnDot(String string) {
+		return Arrays.asList(string.split("\\."));
+	}
+
+	public static final String formAndEncodedQuery(String encodedQuery, String key, String operator,
+			List<String> values) {
+		String encQuery = returnValue(values.stream().filter(Objects::nonNull)
+				.map(value -> String.format("%s%s%s", key, operator, value)).collect(Collectors.joining("^")));
+		return isNotNull(encodedQuery) ? encodedQuery + "^" + encQuery : encQuery;
+	}
+	
+	public static final String formAndEncodedQuery(String key, String operator,
+			List<String> values) {
+		return formAndEncodedQuery(null, key, operator, values);
+	}
+	
+	
+	public static final String formAndEncodedQuery(String encodedQuery, String operator, Map<String, String> mapVal) {
+		String encQuery = returnValue(mapVal.keySet().stream().filter(Objects::nonNull)
+				.map(key -> String.format("%s%s%s", key, operator, mapVal.get(key))).collect(Collectors.joining("^")));
+		return isNotNull(encodedQuery) ? encodedQuery + "^" + encQuery : encQuery;
+	}
+	
+	public static final String formAndEncodedQuery( String operator, Map<String, String> mapVal) {
+		return formAndEncodedQuery(null, operator, mapVal);
 	}
 }
