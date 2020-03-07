@@ -7,10 +7,13 @@ import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SeleniumUtils implements Form {
@@ -178,9 +181,45 @@ public class SeleniumUtils implements Form {
 		}
 	}
 
+	public final WebElement findElement(By locator, long seconds) {
+		return (locator == null) ? null : elementToBePresent(locator, seconds);
+	}
+
 	@Override
-	public WebElement findElement(By locator) {
-		return elementToBePresent(locator, 3);
+	public final WebElement findElement(By locator) {
+		return (locator == null) ? null : elementToBePresent(locator, 3);
+	}
+
+	public final WebElement findElementWithoutWait(By locator) {
+		try {
+			return DRIVER.findElement(locator);
+		} catch (NoSuchElementException e) {
+			return null;
+		}
+	}
+
+	public final WebElement findNestedElement(WebElement parentElement, By childLocator) {
+		return nestedElementToBePresent(parentElement, childLocator, 2);
+	}
+
+	public final WebElement findNestedElement(By parentLocator, By childLocator) {
+		return nestedElementToBePresent(findElement(parentLocator), childLocator, 2);
+	}
+
+	public final String getNestedElementTextValue(WebElement parentElement, By childLocator) {
+		return getText(findNestedElement(parentElement, childLocator));
+	}
+
+	public final String getNestedElementTextValue(By parentLocator, By childLocator) {
+		return getNestedElementTextValue(findElement(parentLocator), childLocator);
+	}
+
+	public final boolean isElementPresent(By locator) {
+		return findElementWithoutWait(locator) != null;
+	}
+
+	public final List<WebElement> findElementsWithoutWait(By locator) {
+		return DRIVER.findElements(locator);
 	}
 
 	public final void nestedElementToBePresent(By parentLocator, By childLocator, long seconds) {
@@ -211,11 +250,19 @@ public class SeleniumUtils implements Form {
 	}
 
 	public final String getText(WebElement element) {
-		return element == null ? null : CommonUtils.returnValue(element.getText());
+		return (element == null) ? null : CommonUtils.returnValue(element.getText());
 	}
 
 	public final String getText(By locator) {
 		return getText(findElement(locator));
+	}
+
+	public final String getAttribute(WebElement element, String attribute) {
+		return (element != null && attribute != null) ? CommonUtils.returnValue(element.getAttribute(attribute)) : null;
+	}
+
+	public final String getAttribute(By locator, String attribute) {
+		return (locator != null && attribute != null) ? getAttribute(findElement(locator), attribute) : null;
 	}
 
 	public final List<String> getNestedElementsGetText(WebElement parentElement, By childLocator) {
@@ -286,7 +333,254 @@ public class SeleniumUtils implements Form {
 			wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
 		}
 	}
-	
-	
 
+	public final void elementWithTextToBeInvisible(By locator, String textValue, long seconds) {
+		if (DRIVER != null && locator != null && textValue != null) {
+			WebDriverWait wait = new WebDriverWait(DRIVER, seconds);
+			wait.until(ExpectedConditions.invisibilityOfElementWithText(locator, textValue));
+		}
+	}
+
+	public final void elementWithTextToBePresent(By locator, String textValue, long seconds) {
+		if (DRIVER != null && locator != null && textValue != null) {
+			WebDriverWait wait = new WebDriverWait(DRIVER, seconds);
+			wait.until(ExpectedConditions.textToBePresentInElementLocated(locator, textValue));
+		}
+	}
+
+	public final void waitUntilURLContains(String urlValue, long seconds) {
+		try {
+			WebDriverWait wait = new WebDriverWait(DRIVER, seconds);
+			wait.until(ExpectedConditions.urlContains(urlValue));
+		} catch (Exception e) {
+		}
+	}
+
+	public final void pageRefresh() {
+		try {
+			DRIVER.navigate().refresh();
+		} catch (Exception e) {
+		}
+	}
+
+	public final void pageReload() {
+		pageRefresh();
+	}
+
+	public final void pressEnter(WebElement element) {
+		if (element != null) {
+			try {
+				element.sendKeys(Keys.ENTER);
+			} catch (Exception e) {
+			}
+		}
+	}
+
+	public final void pressEnter(By locator) {
+		pressEnter(findElement(locator));
+	}
+
+	public final void clear(WebElement element) {
+		if (element != null) {
+			element.clear();
+		}
+	}
+
+	public final void clear(By locator) {
+		clear(findElement(locator));
+	}
+
+	public final void clearAndEnter(WebElement element) {
+		if (element != null) {
+			clear(element);
+			pressEnter(element);
+		}
+	}
+
+	public final void clearAndEnter(By locator) {
+		clearAndEnter(findElement(locator));
+	}
+
+	public final void pressTab(WebElement element) {
+		if (element != null) {
+			try {
+				element.sendKeys(Keys.TAB);
+			} catch (Exception e) {
+			}
+		}
+	}
+
+	public final void pressTab(By locator) {
+		pressTab(findElement(locator));
+	}
+
+	public final void clearAndTab(WebElement element) {
+		if (element != null) {
+			clear(element);
+			pressTab(element);
+		}
+	}
+
+	public final void clearAndTab(By locator) {
+		clearAndTab(findElement(locator));
+	}
+
+	public final void click(WebElement element) {
+		if (element != null) {
+			elementToBeClickable(element, 3);
+			try {
+				element.click();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			pageLoadTime();
+		}
+	}
+
+	public final void click(By locator) {
+		click(findElement(locator));
+	}
+
+	public final void clickWithoutWait(By locator) {
+		click(findElementWithoutWait(locator));
+	}
+
+	public final void clickOnNestedElement(WebElement parentElement, By childLocator) {
+		if (parentElement != null) {
+			click(findNestedElement(parentElement, childLocator));
+		}
+	}
+
+	public final void clickOnNestedElement(By parentLocator, By childLocator) {
+		clickOnNestedElement(findElement(parentLocator), childLocator);
+	}
+
+	public final void clickWithoutScroll(WebElement element) {
+		if (element != null) {
+			try {
+				element.click();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+	}
+
+	public final void clickWithoutScroll(By locator) {
+		clickWithoutScroll(findElement(locator));
+	}
+
+	public final void appendText(WebElement element, String keysToSend) {
+		if (element != null && keysToSend != null) {
+			try {
+				element.sendKeys(keysToSend);
+			} catch (Exception e) {
+			}
+		}
+	}
+
+	public final void appendText(By locator, String keysToSend) {
+		if (locator != null && keysToSend != null) {
+			appendText(findElement(locator), keysToSend);
+		}
+	}
+
+	public final void sendKeys(WebElement element, String keysToSend) {
+		if (element != null && keysToSend != null) {
+			try {
+				scrollToView(element);
+				elementToBeVisible(element, 3);
+			} catch (Exception e) {
+			}
+			clear(element);
+			appendText(element, keysToSend);
+		}
+	}
+
+	public final void sendKeys(By locator, String keysToSend) {
+		if (locator != null && keysToSend != null) {
+			sendKeys(findElement(locator), keysToSend);
+		}
+	}
+
+	public final void pressDownArrow(WebElement element) {
+		if (element != null) {
+			try {
+				element.sendKeys(Keys.ARROW_DOWN);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+	}
+
+	public final void pressDownArrow(By locator) {
+		pressDownArrow(findElement(locator));
+	}
+
+	public final void pressUpArrow(WebElement element) {
+		if (element != null) {
+			try {
+				element.sendKeys(Keys.ARROW_UP);
+			} catch (Exception e) {
+			}
+		}
+	}
+
+	public final void pressUpArrow(By locator) {
+		pressDownArrow(findElement(locator));
+	}
+
+	public final void switchToDefaultWindow() {
+		if (DRIVER != null) {
+			DRIVER.switchTo().defaultContent();
+		}
+	}
+
+	public final void selectByIndex(WebElement element, int index) {
+		if (element != null) {
+			Select sel = new Select(element);
+			sel.selectByIndex(index);
+		}
+	}
+
+	public final void selectByIndex(By locator, int index) {
+		if (locator != null) {
+			selectByIndex(findElement(locator), index);
+		}
+	}
+
+	public final void selectByValue(WebElement element, String value) {
+		if (element != null && value != null) {
+			Select sel = new Select(element);
+			sel.selectByValue(value);
+		}
+	}
+
+	public final void selectByValue(By locator, String value) {
+		if (locator != null && value != null) {
+			selectByValue(findElement(locator), value);
+		}
+	}
+
+	public final void selectByVisibleText(WebElement element, String visibleText) {
+		if (element != null && visibleText != null) {
+			Select sel = new Select(element);
+			sel.selectByVisibleText(visibleText);
+		}
+	}
+
+	public final void selectByVisibleText(By locator, String visibleText) {
+		if (locator != null && visibleText != null) {
+			selectByVisibleText(findElement(locator), visibleText);
+		}
+	}
+
+	public final void submit(WebElement element) {
+		if (element != null) {
+			element.submit();
+		}
+	}
+
+	public final void submit(By locator) {
+		submit(findElement(locator));
+	}//1120
 }
