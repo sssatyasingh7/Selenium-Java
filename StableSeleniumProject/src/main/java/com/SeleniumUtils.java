@@ -1,20 +1,37 @@
 package com;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import javax.imageio.ImageIO;
+
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.WindowType;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+
+import atu.testrecorder.ATUTestRecorder;
+import atu.testrecorder.exceptions.ATUTestRecorderException;
+import ru.yandex.qatools.ashot.AShot;
+import ru.yandex.qatools.ashot.shooting.ShootingStrategies;
 
 public class SeleniumUtils implements Form {
 
@@ -24,6 +41,7 @@ public class SeleniumUtils implements Form {
 	private String defaultURL;
 	private String userName;
 	private String password;
+	private ATUTestRecorder recorder;
 
 	private SeleniumUtils() {
 		TestEnvironment testEnv = TestEnvironment.INSTANCE;
@@ -64,10 +82,14 @@ public class SeleniumUtils implements Form {
 		}
 	}
 
-	public final void closeWebDriverInstance() {
-		if (DRIVER != null) {
-			DRIVER.close();
+	public final void closeWebDriverInstance(WebDriver driver) {
+		if (driver != null) {
+			driver.close();
 		}
+	}
+
+	public final void closeWebDriverInstance() {
+		closeWebDriverInstance(DRIVER);
 	}
 
 	public final void threadSleep(long milliSeconds) {
@@ -156,8 +178,12 @@ public class SeleniumUtils implements Form {
 		return driver != null ? driver.getCurrentUrl() : null;
 	}
 
+	public final String getTitle(WebDriver driver) {
+		return driver != null ? driver.getTitle() : null;
+	}
+
 	public final String getTitle() {
-		return DRIVER != null ? DRIVER.getTitle() : null;
+		return getTitle(DRIVER);
 	}
 
 	public final void scrollToView(WebElement element) {
@@ -582,5 +608,291 @@ public class SeleniumUtils implements Form {
 
 	public final void submit(By locator) {
 		submit(findElement(locator));
-	}//1120
+	}
+
+	public final List<WebElement> elementsToBePresent(By locator, long seconds) {
+		try {
+			WebDriverWait wait = new WebDriverWait(DRIVER, seconds);
+			wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
+		} catch (Exception e) {
+		}
+		return DRIVER.findElements(locator);
+	}
+
+	public final List<WebElement> findElements(By locator) {
+		return elementsToBePresent(locator, 3);
+	}
+
+	public final List<String> getListOfText(List<WebElement> elements) {
+		return elements.stream().map(this::getText).filter(Objects::nonNull).collect(Collectors.toList());
+	}
+
+	public final List<String> getListOfText(By locator) {
+		return getListOfText(findElements(locator));
+	}
+
+	public final List<String> getListOfTextWithoutWait(By locator) {
+		return getListOfText(findElementsWithoutWait(locator));
+	}
+
+	public final List<String> getListOfAttributeValues(List<WebElement> elements, String attributeName) {
+		return elements.stream().map(element -> getAttribute(element, attributeName)).filter(Objects::nonNull)
+				.collect(Collectors.toList());
+	}
+
+	public final List<String> getListOfAttributeValues(By locator, String attributeName) {
+		return getListOfAttributeValues(findElements(locator), attributeName);
+	}
+
+	public final List<String> getListOfAttributeValuesWithoutWait(By locator, String attributeName) {
+		return getListOfAttributeValues(findElementsWithoutWait(locator), attributeName);
+	}
+
+	public final boolean captureScreenshot(String destFilePath) {
+		try {
+			FileUtils.copyFile(((TakesScreenshot) DRIVER).getScreenshotAs(OutputType.FILE), new File(destFilePath));
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	public final void captureFullPageScreenshot(String destFilePath) {
+		try {
+			ImageIO.write(new AShot().shootingStrategy(ShootingStrategies.viewportPasting(1000)).takeScreenshot(DRIVER)
+					.getImage(), "PNG", new File(destFilePath));
+		} catch (Exception e) {
+		}
+	}
+
+	public final Alert getAlertInstance() {
+		try {
+			threadSleep(200);
+			return DRIVER.switchTo().alert();
+		} catch (NoAlertPresentException ae) {
+			return null;
+		}
+	}
+
+	public final boolean isAlertExist() {
+		if (getAlertInstance() != null) {
+			switchToDefaultWindow();
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public final void acceptAlert() {
+		if (DRIVER != null) {
+			DRIVER.switchTo().alert().accept();
+		}
+	}
+
+	public final void acceptAlertIfExist() {
+		Alert alert = getAlertInstance();
+		if (alert != null) {
+			alert.accept();
+		}
+	}
+
+	public final void dismissAlert() {
+		if (DRIVER != null) {
+			DRIVER.switchTo().alert().dismiss();
+		}
+	}
+
+	public final void dismissAlertIfExist() {
+		Alert alert = getAlertInstance();
+		if (alert != null) {
+			alert.dismiss();
+		}
+	}
+
+	public final WebDriver switchToFrame(WebElement element) {
+		return (DRIVER != null && element != null) ? DRIVER.switchTo().frame(element) : null;
+	}
+
+	public final WebDriver switchToFrame(By locator) {
+		return switchToFrame(findElement(locator));
+	}
+
+	public final void switchToFrameIfExist(By locator) {
+		if (locator != null && isElementPresent(locator)) {
+			switchToFrame(locator);
+		}
+	}
+
+	public final WebDriver switchToFrame(String frameNameOrId) {
+		return (DRIVER != null && frameNameOrId != null) ? DRIVER.switchTo().frame(frameNameOrId) : null;
+	}
+
+	public final WebDriver switchToFrame(int frameIndex) {
+		return (DRIVER != null) ? DRIVER.switchTo().frame(frameIndex) : null;
+	}
+
+	public final WebElement switchToActiveElement() {
+		return (DRIVER != null) ? DRIVER.switchTo().activeElement() : null;
+	}
+
+	public final Actions getActionsInstance() {
+		return (DRIVER != null) ? new Actions(DRIVER) : null;
+	}
+
+	public final void mouseHoverToElement(WebElement element) {
+		Actions act = getActionsInstance();
+		if (act != null && element != null) {
+			act.moveToElement(element).build().perform();
+		}
+	}
+
+	public final void mouseHoverToElement(By locator) {
+		mouseHoverToElement(findElement(locator));
+	}
+
+	public final void pressEnter() {
+		Actions act = getActionsInstance();
+		if (act != null) {
+			act.sendKeys(Keys.ENTER);
+		}
+	}
+
+	public final WebDriver switchToWindow(String nameOrHandle) {
+		return (DRIVER != null && nameOrHandle != null) ? DRIVER.switchTo().window(nameOrHandle) : null;
+	}
+
+	public final String getWindowTitle(String nameOrHandle) {
+		WebDriver driverValue = switchToWindow(nameOrHandle);
+		return (driverValue != null) ? driverValue.getTitle() : null;
+	}
+
+	public final String getWindowId() {
+		return (DRIVER != null) ? DRIVER.getWindowHandle() : null;
+	}
+
+	public final List<String> getWindowsId() {
+		return (DRIVER != null) ? new ArrayList<>(DRIVER.getWindowHandles()) : new ArrayList<String>();
+	}
+
+	public final WebDriver switchToWindowByTitle(String windowTitle) {
+		String currentWindowId = getWindowId();
+		for (String windowId : getWindowsId()) {
+			if (CommonUtils.compareContains(getWindowTitle(windowId), windowTitle)) {
+				currentWindowId = windowId;
+				break;
+			}
+		}
+		return switchToWindow(currentWindowId);
+	}
+
+	public final WebDriver switchToWindowByURL(String windowURL) {
+		String currentWindowId = getWindowId();
+		for (String windowId : getWindowsId()) {
+			switchToWindow(windowId);
+			if (CommonUtils.compareContains(getCurrentURL(), windowURL)) {
+				currentWindowId = windowId;
+				break;
+			}
+		}
+		return switchToWindow(currentWindowId);
+	}
+
+	public final List<String> getWindowsTitle() {
+		return getWindowsId().stream().map(this::switchToWindow).filter(Objects::nonNull).map(this::getTitle)
+				.collect(Collectors.toList());
+	}
+
+	public final List<String> getWindowsURL() {
+		return getWindowsId().stream().map(this::switchToWindow).filter(Objects::nonNull).map(this::getWindowURL)
+				.collect(Collectors.toList());
+	}
+
+	public final void openNewTab() {
+		if (DRIVER != null) {
+			DRIVER.switchTo().newWindow(WindowType.TAB);
+		}
+	}
+
+	public final String openNewTabInBrowser() {
+		((JavascriptExecutor) DRIVER).executeScript("window.open('about:blank','_blank');");
+		switchToWindowByURL("about:blank");
+		return getWindowId();
+	}
+
+	public final int getTabCount() {
+		return DRIVER.getWindowHandles().size();
+	}
+
+	public final WebDriver switchToTab(int index) {
+		try {
+			return switchToWindow(getWindowsId().get(index));
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public final void switchToTabAndClose(int index) {
+		closeWebDriverInstance(switchToTab(index));
+	}
+
+	public final void switchToTabAndClose(String windowTitle) {
+		closeWebDriverInstance(switchToWindowByTitle(windowTitle));
+	}
+
+	public final String getCSSValue(WebElement element, String cssAttribute) {
+		return (element != null) ? element.getCssValue(cssAttribute) : null;
+	}
+
+	public final String getCSSValue(By locator, String cssAttribute) {
+		return getCSSValue(findElement(locator), cssAttribute);
+	}
+
+	public final int getIndexBasedOnText(By locator, String textValue) {
+		int count = 0;
+		for (WebElement element : findElements(locator)) {
+			count++;
+			if (CommonUtils.compareEqualsIgnoreCase(getText(element), textValue)) {
+				break;
+			}
+		}
+		return count;
+	}
+
+	public final int getIndexBasedOnAttribute(By locator, String attribute, String attributeValue) {
+		int count = 0;
+		for (WebElement element : findElements(locator)) {
+			count++;
+			if (CommonUtils.compareEqualsIgnoreCase(getAttribute(element, attribute), attributeValue)) {
+				break;
+			}
+		}
+		return count;
+	}
+
+	public final void startRecording(String destFolderPath, String fileName) {
+		try {
+			recorder = new ATUTestRecorder(destFolderPath, fileName, false);
+			recorder.start();
+		} catch (ATUTestRecorderException e) {
+		}
+	}
+
+	public final void stopRecording() {
+		if (CommonUtils.isNotNull(recorder)) {
+			try {
+				recorder.stop();
+			} catch (ATUTestRecorderException e) {
+			}
+		}
+	}
+	
+	@BeforeMethod
+	public void beforeMethod() {
+		pageLoadTime();
+	}
+	
+	@AfterMethod
+	public void afterMethod() {
+		pageLoadTime();
+	}
 }
