@@ -271,29 +271,49 @@ public final class ReportUtils {
 		writeLogsToLoggerFile("*** ERROR.LOGS::\n" + errors + "\n***\n");
 	}
 
+	private final String formMessage(Object methodName, Object message) {
+		return methodName + " Operation " + message;
+	}
+
 	public final void assertPass(final String methodName, Object message, Object actual, Object expected) {
-		setPassLogs(methodName + "Operation" + message, actual, expected, false);
+		setPassLogs(formMessage(methodName, message), actual, expected, false);
 	}
 
 	public final <E> void assertPass(final String methodName, Object message, List<E> actual, List<E> expected) {
-		setPassLogs(methodName + "Operation" + message, actual, expected, false);
+		setPassLogs(formMessage(methodName, message), actual, expected, false);
 	}
 
 	public final void assertFail(final String methodName, String message, Object actual, Object expected) {
-		setFailLogs(methodName + "Operation" + message, actual, expected, true);
-		message = methodName + "Operation" + message;
+		message = formMessage(methodName, message);
+		setFailLogs(message, actual, expected, true);
 		if (CommonUtils.isNull(actual) && CommonUtils.isNull(expected))
 			Assert.fail(message);
 		else
 			Assert.fail(message + "\nAct. Val. is:: " + actual + "\nExp. Val. is:: " + expected);
 	}
-	
+
 	public final <E> void assertFail(final String methodName, String message, List<E> actual, List<E> expected) {
-		setFailLogs(methodName + "Operation" + message, actual, expected, true);
-		message = methodName + "Operation" + message;
+		message = formMessage(methodName, message);
+		setFailLogs(message, actual, expected, true);
 		if (CommonUtils.isListEmpty(actual) && CommonUtils.isListEmpty(expected))
 			Assert.fail(message);
 		else
 			Assert.fail(message + "\nAct. Val. is:: " + actual + "\nExp. Val. is:: " + expected);
+	}
+
+	public final void verifyPass(final String methodName, Object message, Object actual, Object expected) {
+		setPassLogs(formMessage(methodName, message), actual, expected, false);
+	}
+
+	public final <E> void verifyPass(final String methodName, Object message, List<E> actual, List<E> expected) {
+		setPassLogs(formMessage(methodName, message), actual, expected, false);
+	}
+
+	public final void verifyFail(final String methodName, String message, Object actual, Object expected) {
+		setFailLogs(formMessage(methodName, message), actual, expected, true);
+	}
+
+	public final <E> void verifyFail(final String methodName, String message, List<E> actual, List<E> expected) {
+		setFailLogs(formMessage(methodName, message), actual, expected, true);
 	}
 }

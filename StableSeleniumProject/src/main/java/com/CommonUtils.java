@@ -209,7 +209,7 @@ public final class CommonUtils {
 	}
 
 	public static final List<String> getListOfCommaSaperatedWords(String string) {
-		return isNotNull(string) ? Arrays.asList(string.split(",")) : new ArrayList<>();
+		return isNotNull(string) ? Arrays.asList(string.split(",")) : SystemData.EMPTY_LIST_OF_TYPE_STRING;
 	}
 
 	/**
@@ -219,7 +219,7 @@ public final class CommonUtils {
 	 * @return List<String>
 	 */
 	public static final List<String> getListOfSpecialCharacterSaperatedWords(String inputString, String specialChar) {
-		return isNotNull(inputString) ? Arrays.asList(inputString.split(specialChar)) : new ArrayList<>();
+		return isNotNull(inputString) ? Arrays.asList(inputString.split(specialChar)) : SystemData.EMPTY_LIST_OF_TYPE_STRING;
 	}
 
 	/**
