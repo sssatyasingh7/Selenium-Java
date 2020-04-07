@@ -54,16 +54,26 @@ public final class DateUtils {
 	/**
 	 * 
 	 * @param dateFormat
-	 * @return String
+	 * @return {@link String}
 	 */
 	public static final String getCurrentDateTime(String dateFormat) {
 		return getCurrentTimeForTimeZone(dateFormat, null);
 	}
 
+	/**
+	 * 
+	 * @param dateFormat
+	 * @return {@link String}
+	 */
 	public static final String getCurrentDateTimeInCST(String dateFormat) {
 		return getCurrentTimeForTimeZone(dateFormat, CST_TIMEZONE);
 	}
 
+	/**
+	 * 
+	 * @param dateFormat
+	 * @return {@link String}
+	 */
 	public static final String getCurrentDateTimeInPST(String dateFormat) {
 		return getCurrentTimeForTimeZone(dateFormat, PST_TIMEZONE);
 	}
@@ -74,7 +84,7 @@ public final class DateUtils {
 	 * @param dateFormat
 	 * @param refDate
 	 * @param daysDiff
-	 * @return String
+	 * @return {@link String}
 	 */
 	public static final String getDateTimeAfterBeforeDateTimeInDays(String dateFormat, String refDate, int daysDiff) {
 		DateFormat df = new SimpleDateFormat(dateFormat);
@@ -93,7 +103,7 @@ public final class DateUtils {
 	 * @param dateFormat
 	 * @param refDate
 	 * @param hoursDiff
-	 * @return
+	 * @return {@link String}
 	 */
 	public static final String getDateTimeAfterBeforeDateTimeInHours(String dateFormat, String refDate, int hoursDiff) {
 		DateFormat df = new SimpleDateFormat(dateFormat);
@@ -112,7 +122,7 @@ public final class DateUtils {
 	 * @param dateFormat
 	 * @param refDate
 	 * @param minutesDiff
-	 * @return
+	 * @return {@link String}
 	 */
 	public static final String getDateTimeAfterBeforeDateTimeInMinutes(String dateFormat, String refDate,
 			int minutesDiff) {
@@ -132,7 +142,7 @@ public final class DateUtils {
 	 * @param dateFormat
 	 * @param refDate
 	 * @param monthsDiff
-	 * @return
+	 * @return {@link String}
 	 */
 	public static final String getDateTimeAfterBeforeDateTimeInMonths(String dateFormat, String refDate,
 			int monthsDiff) {
@@ -152,7 +162,7 @@ public final class DateUtils {
 	 * @param dateFormat
 	 * @param firstDate
 	 * @param lastDate
-	 * @return
+	 * @return {@link Integer}
 	 */
 	public static final int getSecondsBetweenDates(String dateFormat, String firstDate, String lastDate) {
 		DateFormat df = new SimpleDateFormat(dateFormat);
@@ -171,7 +181,7 @@ public final class DateUtils {
 	 * @param dateFormat
 	 * @param firstDate
 	 * @param lastDate
-	 * @return
+	 * @return {@link Integer}
 	 */
 	public static final int getMinutesBetweenDates(String dateFormat, String firstDate, String lastDate) {
 		DateFormat df = new SimpleDateFormat(dateFormat);
@@ -190,7 +200,7 @@ public final class DateUtils {
 	 * @param dateFormat
 	 * @param firstDate
 	 * @param lastDate
-	 * @return
+	 * @return {@link Integer}
 	 */
 	public static final int getHoursBetweenDates(String dateFormat, String firstDate, String lastDate) {
 		DateFormat df = new SimpleDateFormat(dateFormat);
@@ -209,7 +219,7 @@ public final class DateUtils {
 	 * @param dateFormat
 	 * @param firstDate
 	 * @param lastDate
-	 * @return
+	 * @return {@link Integer}
 	 */
 	public static final int getDaysBetweenDates(String dateFormat, String firstDate, String lastDate) {
 		DateFormat df = new SimpleDateFormat(dateFormat);
@@ -228,7 +238,7 @@ public final class DateUtils {
 	 * @param dateFormat
 	 * @param firstDate
 	 * @param lastDate
-	 * @return
+	 * @return {@link Integer}
 	 */
 	public static final int getWeeksBetweenDates(String dateFormat, String firstDate, String lastDate) {
 		DateFormat df = new SimpleDateFormat(dateFormat);
@@ -247,7 +257,7 @@ public final class DateUtils {
 	 * @param dateFormat
 	 * @param firstDate
 	 * @param lastDate
-	 * @return
+	 * @return {@link Integer}
 	 */
 	public static final int getMonthsBetweenDates(String dateFormat, String firstDate, String lastDate) {
 		DateFormat df = new SimpleDateFormat(dateFormat);
@@ -264,7 +274,7 @@ public final class DateUtils {
 	/**
 	 * 
 	 * @param monthName
-	 * @return
+	 * @return {@link Integer}
 	 */
 	public static final int getMonthsIndex(String monthName) {
 		Calendar calendar = Calendar.getInstance();
@@ -280,7 +290,7 @@ public final class DateUtils {
 	 * 
 	 * @param year
 	 * @param month
-	 * @return
+	 * @return {@link String}
 	 */
 	public static final String getLastDateOfMonth(int year, int month) {
 		Calendar calendar = new GregorianCalendar(year, month, Calendar.DATE);
@@ -292,7 +302,7 @@ public final class DateUtils {
 	 * 
 	 * @param year
 	 * @param monthName
-	 * @return
+	 * @return {@link String}
 	 */
 	public static final String getLastDateOfMonth(String year, String monthName) {
 		return getLastDateOfMonth(Integer.parseInt(year), getMonthsIndex(monthName));
@@ -302,7 +312,7 @@ public final class DateUtils {
 	 * 
 	 * @param dateFormat
 	 * @param dateValue
-	 * @return
+	 * @return {@link Boolean}
 	 */
 	public static final boolean isDateInValidFormat(String dateFormat, String dateValue) {
 		DateFormat df = new SimpleDateFormat(dateFormat);
@@ -320,7 +330,7 @@ public final class DateUtils {
 	 * @param dateValue
 	 * @param initDateFormat
 	 * @param finalDateFormat
-	 * @return
+	 * @return {@link String}
 	 */
 	public static final String changeDateFormat(String dateValue, String initDateFormat, String finalDateFormat) {
 		DateTimeFormatter initDateFor = DateTimeFormatter.ofPattern(initDateFormat);
@@ -332,7 +342,7 @@ public final class DateUtils {
 	 * 
 	 * @param actualDate
 	 * @param comparableDate
-	 * @return
+	 * @return {@link Boolean}
 	 */
 	public static final boolean isDateAfter(Date actualDate, Date comparableDate) {
 		return comparableDate.after(actualDate);
@@ -342,7 +352,7 @@ public final class DateUtils {
 	 * 
 	 * @param actualDate
 	 * @param comparableDate
-	 * @return
+	 * @return {@link Boolean}
 	 */
 	public static final boolean isDateBefore(Date actualDate, Date comparableDate) {
 		return comparableDate.before(actualDate);
@@ -352,7 +362,7 @@ public final class DateUtils {
 	 * 
 	 * @param actualDate
 	 * @param comparableDate
-	 * @return
+	 * @return {@link Boolean}
 	 */
 	public static final boolean isDateEquals(Date actualDate, Date comparableDate) {
 		return comparableDate.equals(actualDate);
@@ -363,7 +373,7 @@ public final class DateUtils {
 	 * @param actualDate
 	 * @param firstDate
 	 * @param lastDate
-	 * @return
+	 * @return {@link Boolean}
 	 */
 	public static final boolean isDateBetween(Date actualDate, Date firstDate, Date lastDate) {
 		return (actualDate.after(firstDate) && actualDate.before(lastDate)) ? true : false;
@@ -375,7 +385,7 @@ public final class DateUtils {
 	 * @param actualDate
 	 * @param firstDate
 	 * @param lastDate
-	 * @return
+	 * @return {@link Boolean}
 	 */
 	public static final boolean isDateBetween(String dateFormat, String actualDate, String firstDate, String lastDate) {
 		try {
@@ -394,7 +404,7 @@ public final class DateUtils {
 	 * @param actual
 	 * @param expected
 	 * @param deviationInSeconds
-	 * @return
+	 * @return {@link Boolean}
 	 */
 	public static final boolean isDateBetweenTimeInterval(String dateFormat, String actual, String expected,
 			int deviationInSeconds) {
@@ -423,7 +433,7 @@ public final class DateUtils {
 	 * @param dateFormat
 	 * @param actualDate
 	 * @param comparableDate
-	 * @return
+	 * @return {@link Boolean}
 	 */
 	public static final boolean isDateAfter(String dateFormat, String actualDate, String comparableDate) {
 		try {
@@ -440,7 +450,7 @@ public final class DateUtils {
 	 * @param dateFormat
 	 * @param actualDate
 	 * @param comparableDate
-	 * @return
+	 * @return {@link Boolean}
 	 */
 	public static final boolean isDateBefore(String dateFormat, String actualDate, String comparableDate) {
 		try {
@@ -457,7 +467,7 @@ public final class DateUtils {
 	 * @param dateFormat
 	 * @param actualDate
 	 * @param comparableDate
-	 * @return
+	 * @return {@link Boolean}
 	 */
 	public static final boolean isDateEquals(String dateFormat, String actualDate, String comparableDate) {
 		try {
@@ -472,7 +482,7 @@ public final class DateUtils {
 	/**
 	 * 
 	 * @param date
-	 * @return
+	 * @return {@link String}
 	 */
 	public static final String getDayFromDate(Date date) {
 		return new SimpleDateFormat("EEEE").format(date);
@@ -482,7 +492,7 @@ public final class DateUtils {
 	 * 
 	 * @param dateFormat
 	 * @param datValue
-	 * @return
+	 * @return {@link String}
 	 */
 	public static final String getDayFromDate(String dateFormat, String datValue) {
 		try {
@@ -496,7 +506,7 @@ public final class DateUtils {
 	/**
 	 * 
 	 * @param weekDayIndex
-	 * @return
+	 * @return {@link String}
 	 */
 	public static final String getWeekDayName(int weekDayIndex) {
 		return weekDaysName.values()[weekDayIndex].toString();

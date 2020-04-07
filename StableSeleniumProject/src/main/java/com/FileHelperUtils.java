@@ -19,7 +19,7 @@ public class FileHelperUtils {
 	/**
 	 * 
 	 * @param pathName
-	 * @return File
+	 * @return {@link File}
 	 */
 	public static final File createFile(String pathName) {
 		File file = new File(pathName);
@@ -36,7 +36,7 @@ public class FileHelperUtils {
 	/**
 	 * 
 	 * @param pathName
-	 * @return File
+	 * @return {@link File}
 	 */
 	public static final File createFolder(String pathName) {
 		File file = new File(pathName);
@@ -58,7 +58,7 @@ public class FileHelperUtils {
 	/**
 	 * 
 	 * @param pathName
-	 * @return List<File>
+	 * @return {@link List}
 	 */
 	public static final List<File> getListOfFiles(String pathName) {
 		return Arrays.asList(new File(pathName).listFiles());
@@ -68,7 +68,7 @@ public class FileHelperUtils {
 	 * 
 	 * @param folderPath
 	 * @param fileName
-	 * @return String
+	 * @return {@link String}
 	 */
 	public static final String filePathFromFolder(String folderPath, String fileName) {
 		String pathName = null;
@@ -82,6 +82,10 @@ public class FileHelperUtils {
 		return pathName;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public static final String getCurrentDirectory() {
 		return System.getProperty("user.dir");
 	}
@@ -199,7 +203,7 @@ public class FileHelperUtils {
 	/**
 	 * 
 	 * @param fileName
-	 * @return String
+	 * @return {@link String}
 	 */
 	public static final String getFilePathFromReportOrResourcesFolder(String fileName) {
 		if (fileName != null && !(fileName.contains("Report") || fileName.contains("Resources"))) {
@@ -218,6 +222,15 @@ public class FileHelperUtils {
 		return fileName;
 	}
 
+	/**
+	 * 
+	 * @param filePath
+	 * @param sheetNameOrNum
+	 * @param initialRowNum
+	 * @param keyCoulmnNum
+	 * @param valueColumnNum
+	 * @return {@link Map}
+	 */
 	public static final Map<String, Set<String>> getKeyValuePairsFromExcel(String filePath, String sheetNameOrNum,
 			int initialRowNum, int keyCoulmnNum, int valueColumnNum) {
 		ExcelUtils excel = new ExcelUtils();

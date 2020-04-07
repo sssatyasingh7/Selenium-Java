@@ -11,6 +11,11 @@ import java.util.List;
 
 public class TextUtils {
 
+	/**
+	 * 
+	 * @param filePath
+	 * @return {@link Byte}
+	 */
 	public static final byte[] readBinaryFile(String filePath) {
 		try {
 			return Files.readAllBytes(Paths.get(filePath));
@@ -20,10 +25,20 @@ public class TextUtils {
 		}
 	}
 
+	/**
+	 * 
+	 * @param filePath
+	 * @return {@link String}
+	 */
 	public static final String readTextFile(String filePath) {
 		return new String(readBinaryFile(filePath));
 	}
 
+	/**
+	 * 
+	 * @param filePath
+	 * @return {@link List}
+	 */
 	public static final List<String> readTextFileByLines(String filePath) {
 		try {
 			return Files.readAllLines(Paths.get(filePath));
@@ -33,6 +48,11 @@ public class TextUtils {
 		}
 	}
 
+	/**
+	 * 
+	 * @param filePath
+	 * @param content
+	 */
 	public static final void writeToTextFile(String filePath, String content) {
 		File file = new File(filePath);
 		content = content.replaceAll("\n", "\r\n");
@@ -58,12 +78,23 @@ public class TextUtils {
 		}
 	}
 
+	/**
+	 * 
+	 * @param filePath
+	 * @param beforeText
+	 * @param reqTextLength
+	 * @return {@link String}
+	 */
 	public static final String getRequiredTextFromTextFile(String filePath, String beforeText, int reqTextLength) {
 		String fileContent = readTextFile(filePath);
 		int initLen = fileContent.indexOf(beforeText) + fileContent.length();
 		return fileContent.substring(initLen, initLen + reqTextLength).trim();
 	}
 
+	/**
+	 * 
+	 * @param filePath
+	 */
 	public static final void clearTextFile(String filePath) {
 		try {
 			Files.newBufferedWriter(Paths.get(filePath), StandardOpenOption.TRUNCATE_EXISTING);

@@ -15,6 +15,15 @@ public final class GlideRecordUtils {
 	private GlideRecordUtils() {
 	}
 
+	/**
+	 * Get RemoteGlideRecord Instance
+	 * 
+	 * @param tableName
+	 * @param encodedQuery
+	 * @param addQueryKeyValue
+	 * @param setLimitCount
+	 * @return {@link RemoteGlideRecord}
+	 */
 	private final RemoteGlideRecord getGlideRecordInstance(String tableName, String encodedQuery,
 			Map<String, String> addQueryKeyValue, int setLimitCount) {
 		RemoteGlideRecord glide = new GlideRecordForTable(tableName);
@@ -32,11 +41,27 @@ public final class GlideRecordUtils {
 		return glide;
 	}
 
+	/**
+	 * 
+	 * @param tableName
+	 * @param encodedQuery
+	 * @param addQueryKeyValue
+	 * @return {@link RemoteGlideRecord}
+	 */
 	public final RemoteGlideRecord getGlideRecordInstance(String tableName, String encodedQuery,
 			Map<String, String> addQueryKeyValue) {
 		return getGlideRecordInstance(tableName, encodedQuery, addQueryKeyValue, LIST_OF_MAXIMUM_SEARCH_COUNT);
 	}
 
+	/**
+	 * 
+	 * @param tableName
+	 * @param encodedQuery
+	 * @param addQueryKey
+	 * @param addQueryValue
+	 * @param setLimitValue
+	 * @return {@link RemoteGlideRecord}
+	 */
 	private final RemoteGlideRecord getGlideRecordInstance(String tableName, String encodedQuery, String addQueryKey,
 			String addQueryValue, int setLimitValue) {
 		RemoteGlideRecord glide = new GlideRecordForTable(tableName);
@@ -54,20 +79,46 @@ public final class GlideRecordUtils {
 		return glide;
 	}
 
+	/**
+	 * 
+	 * @param tableName
+	 * @param encodedQuery
+	 * @param addQueryKey
+	 * @param addQueryValue
+	 * @return {@link RemoteGlideRecord}
+	 */
 	public final RemoteGlideRecord getGlideRecordInstance(String tableName, String encodedQuery, String addQueryKey,
 			String addQueryValue) {
 		return getGlideRecordInstance(tableName, encodedQuery, addQueryKey, addQueryValue,
 				LIST_OF_MAXIMUM_SEARCH_COUNT);
 	}
 
+	/**
+	 * 
+	 * @param glide
+	 * @return {@link Boolean}
+	 */
 	public final boolean isGlideInstanceNull(RemoteGlideRecord glide) {
 		return (glide != null && glide.getRecordCount() == 0);
 	}
 
+	/**
+	 * 
+	 * @param glide
+	 * @return {@link Boolean}
+	 */
 	public final boolean isGlideInstanceNotNull(RemoteGlideRecord glide) {
 		return !isGlideInstanceNull(glide);
 	}
 
+	/**
+	 * 
+	 * @param tableName
+	 * @param encodedQuery
+	 * @param addQueryKey
+	 * @param addQueryValue
+	 * @return {@link RemoteGlideRecord}
+	 */
 	public final RemoteGlideRecord getSingleRecordInstance(String tableName, String encodedQuery, String addQueryKey,
 			String addQueryValue) {
 		RemoteGlideRecord glide = null;
@@ -83,119 +134,316 @@ public final class GlideRecordUtils {
 		return glide;
 	}
 
+	/**
+	 * 
+	 * @param tableName
+	 * @param encodedQuery
+	 * @return {@link RemoteGlideRecord}
+	 */
 	public final RemoteGlideRecord getSingleRecordInstance(String tableName, String encodedQuery) {
 		return getSingleRecordInstance(tableName, encodedQuery, null, null);
 	}
 
+	/**
+	 * 
+	 * @param tableName
+	 * @param addQueryKey
+	 * @param addQueryValue
+	 * @return {@link RemoteGlideRecord}
+	 */
 	public final RemoteGlideRecord getSingleRecordInstance(String tableName, String addQueryKey, String addQueryValue) {
 		return getSingleRecordInstance(tableName, null, addQueryKey, addQueryValue);
 	}
 
+	/**
+	 * 
+	 * @param tableName
+	 * @param encodedQuery
+	 * @return {@link RemoteGlideRecord}
+	 */
 	public final RemoteGlideRecord getListOfRecordInstance(String tableName, String encodedQuery) {
 		return getGlideRecordInstance(tableName, encodedQuery, null, null, 0);
 	}
 
+	/**
+	 * 
+	 * @param tableName
+	 * @param addQueryKey
+	 * @param addQueryValue
+	 * @return {@link RemoteGlideRecord}
+	 */
 	public final RemoteGlideRecord getListOfRecordInstance(String tableName, String addQueryKey, String addQueryValue) {
 		return getGlideRecordInstance(tableName, null, addQueryKey, addQueryValue, 0);
 	}
 
+	/**
+	 * 
+	 * @param glide
+	 * @param fieldKey
+	 * @return {@link String}
+	 */
 	public final String getRecordValue(RemoteGlideRecord glide, String fieldKey) {
 		return isGlideInstanceNotNull(glide) ? glide.getValue(fieldKey) : null;
 	}
 
+	/**
+	 * 
+	 * @param tableName
+	 * @param encodedQuery
+	 * @param addQueryKey
+	 * @param addQueryValue
+	 * @param fieldKey
+	 * @return {@link String}
+	 */
 	public final String getRecordValue(String tableName, String encodedQuery, String addQueryKey, String addQueryValue,
 			String fieldKey) {
 		return getRecordValue(getSingleRecordInstance(tableName, encodedQuery, addQueryKey, addQueryValue), fieldKey);
 	}
 
+	/**
+	 * 
+	 * @param tableName
+	 * @param encodedQuery
+	 * @param fieldKey
+	 * @return {@link String}
+	 */
 	public final String getRecordValue(String tableName, String encodedQuery, String fieldKey) {
 		return getRecordValue(tableName, encodedQuery, null, null, fieldKey);
 	}
 
+	/**
+	 * 
+	 * @param tableName
+	 * @param addQueryKey
+	 * @param addQueryValue
+	 * @param fieldKey
+	 * @return {@link String}
+	 */
 	public final String getRecordValue(String tableName, String addQueryKey, String addQueryValue, String fieldKey) {
 		return getRecordValue(tableName, null, addQueryKey, addQueryValue, fieldKey);
 	}
 
+	/**
+	 * 
+	 * @param glide
+	 * @param fieldKey
+	 * @return {@link String}
+	 */
 	public final String getRecordDisplayValue(RemoteGlideRecord glide, String fieldKey) {
 		return isGlideInstanceNotNull(glide) ? glide.getDisplayValue(fieldKey) : null;
 	}
 
+	/**
+	 * 
+	 * @param tableName
+	 * @param encodedQuery
+	 * @param addQueryKey
+	 * @param addQueryValue
+	 * @param fieldKey
+	 * @return {@link String}
+	 */
 	public final String getRecordDisplayValue(String tableName, String encodedQuery, String addQueryKey,
 			String addQueryValue, String fieldKey) {
 		return getRecordDisplayValue(getSingleRecordInstance(tableName, encodedQuery, addQueryKey, addQueryValue),
 				fieldKey);
 	}
 
+	/**
+	 * 
+	 * @param tableName
+	 * @param encodedQuery
+	 * @param fieldKey
+	 * @return {@link String}
+	 */
 	public final String getRecordDisplayValue(String tableName, String encodedQuery, String fieldKey) {
 		return getRecordDisplayValue(tableName, encodedQuery, null, null, fieldKey);
 	}
 
+	/**
+	 * 
+	 * @param tableName
+	 * @param addQueryKey
+	 * @param addQueryValue
+	 * @param fieldKey
+	 * @return {@link String}
+	 */
 	public final String getRecordDisplayValue(String tableName, String addQueryKey, String addQueryValue,
 			String fieldKey) {
 		return getRecordDisplayValue(tableName, null, addQueryKey, addQueryValue, fieldKey);
 	}
 
+	/**
+	 * 
+	 * @param glide
+	 * @param fieldKey
+	 * @return {@link List}
+	 */
 	public final List<String> getRecordsValue(RemoteGlideRecord glide, String fieldKey) {
 		return isGlideInstanceNotNull(glide) ? glide.getListOfValue(fieldKey) : SystemData.EMPTY_LIST_OF_TYPE_STRING;
 	}
 
+	/**
+	 * 
+	 * @param tableName
+	 * @param encodedQuery
+	 * @param addQueryKey
+	 * @param addQueryValue
+	 * @param fieldKey
+	 * @return {@link List}
+	 */
 	public final List<String> getRecordsValue(String tableName, String encodedQuery, String addQueryKey,
 			String addQueryValue, String fieldKey) {
 		return getRecordsValue(getGlideRecordInstance(tableName, encodedQuery, addQueryKey, addQueryValue, 0),
 				fieldKey);
 	}
 
+	/**
+	 * 
+	 * @param tableName
+	 * @param encodedQuery
+	 * @param fieldKey
+	 * @return {@link List}
+	 */
 	public final List<String> getRecordsValue(String tableName, String encodedQuery, String fieldKey) {
 		return getRecordsValue(tableName, encodedQuery, null, null, fieldKey);
 	}
 
+	/**
+	 * 
+	 * @param tableName
+	 * @param addQueryKey
+	 * @param addQueryValue
+	 * @param fieldKey
+	 * @return {@link List}
+	 */
 	public final List<String> getRecordsValue(String tableName, String addQueryKey, String addQueryValue,
 			String fieldKey) {
 		return getRecordsValue(tableName, null, addQueryKey, addQueryValue, fieldKey);
 	}
 
+	/**
+	 * 
+	 * @param glide
+	 * @param fieldKey
+	 * @return {@link List}
+	 */
 	public final List<String> getRecordsDisplayValue(RemoteGlideRecord glide, String fieldKey) {
 		return isGlideInstanceNotNull(glide) ? glide.getListOfDisplayValue(fieldKey)
 				: SystemData.EMPTY_LIST_OF_TYPE_STRING;
 	}
 
+	/**
+	 * Get Display Value Of Record's fieldKey
+	 * 
+	 * @param tableName
+	 * @param encodedQuery
+	 * @param addQueryKey
+	 * @param addQueryValue
+	 * @param fieldKey
+	 * @return {@link List}
+	 */
 	public final List<String> getRecordsDisplayValue(String tableName, String encodedQuery, String addQueryKey,
 			String addQueryValue, String fieldKey) {
 		return getRecordsDisplayValue(getGlideRecordInstance(tableName, encodedQuery, addQueryKey, addQueryValue, 0),
 				fieldKey);
 	}
 
+	/**
+	 * Get Display Value Of Record's fieldKey
+	 * 
+	 * @param tableName
+	 * @param encodedQuery
+	 * @param fieldKey
+	 * @return {@link List}
+	 */
 	public final List<String> getRecordsDisplayValue(String tableName, String encodedQuery, String fieldKey) {
 		return getRecordsDisplayValue(tableName, encodedQuery, null, null, fieldKey);
 	}
 
+	/**
+	 * Get Display Value Of Record's fieldKey
+	 * 
+	 * @param tableName
+	 * @param addQueryKey
+	 * @param addQueryValue
+	 * @param fieldKey
+	 * @return {@link List}
+	 */
 	public final List<String> getRecordsDisplayValue(String tableName, String addQueryKey, String addQueryValue,
 			String fieldKey) {
 		return getRecordsDisplayValue(tableName, null, addQueryKey, addQueryValue, fieldKey);
 	}
 
+	/**
+	 * Get Record Count
+	 * 
+	 * @param tableName
+	 * @param encodedQuery
+	 * @param addQueryKey
+	 * @param addQueryValue
+	 * @return {@link Integer}
+	 */
 	public final int getRecordCount(String tableName, String encodedQuery, String addQueryKey, String addQueryValue) {
 		RemoteGlideRecord glide = getGlideRecordInstance(tableName, encodedQuery, addQueryKey, addQueryValue, 0);
 		return isGlideInstanceNotNull(glide) ? glide.getRecordCount() : 0;
 	}
 
+	/**
+	 * Get Record Count
+	 * 
+	 * @param tableName
+	 * @param encodedQuery
+	 * @return {@link Integer}
+	 */
 	public final int getRecordCount(String tableName, String encodedQuery) {
 		return getRecordCount(tableName, encodedQuery, null, null);
 	}
 
+	/**
+	 * Get Record Count
+	 * 
+	 * @param tableName
+	 * @param addQueryKey
+	 * @param addQueryValue
+	 * @return {@link Integer}
+	 */
 	public final int getRecordCount(String tableName, String addQueryKey, String addQueryValue) {
 		return getRecordCount(tableName, null, addQueryKey, addQueryValue);
 	}
 
+	/**
+	 * Get Record SysId
+	 * 
+	 * @param tableName
+	 * @param encodedQuery
+	 * @param addQueryKey
+	 * @param addQueryValue
+	 * @return {@link String}
+	 */
 	public final String getRecordSysId(String tableName, String encodedQuery, String addQueryKey,
 			String addQueryValue) {
 		return getRecordValue(tableName, encodedQuery, addQueryKey, addQueryValue, SystemData.SYS_ID);
 	}
 
+	/**
+	 * Get Record SysId
+	 * 
+	 * @param tableName
+	 * @param encodedQuery
+	 * @return {@link String}
+	 */
 	public final String getRecordSysId(String tableName, String encodedQuery) {
 		return getRecordSysId(tableName, encodedQuery, null, null);
 	}
 
+	/**
+	 * Get Record SysId
+	 * 
+	 * @param tableName
+	 * @param addQueryKey
+	 * @param addQueryValue
+	 * @return {@link String}
+	 */
 	public final String getRecordSysId(String tableName, String addQueryKey, String addQueryValue) {
 		return getRecordSysId(tableName, null, addQueryKey, addQueryValue);
 	}

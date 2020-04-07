@@ -7,10 +7,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -19,9 +17,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
-
-import org.apache.commons.lang3.ObjectUtils;
-import org.checkerframework.common.value.qual.StringVal;
 
 public final class CommonUtils {
 	private CommonUtils() {
@@ -42,7 +37,7 @@ public final class CommonUtils {
 	 * 
 	 * @param min
 	 * @param max
-	 * @return String
+	 * @return {@link String}
 	 */
 	public static final String generateRandomNumber(long min, long max) {
 		return String.valueOf((Math.random() * ((max - min) + 1)) + min);
@@ -51,42 +46,87 @@ public final class CommonUtils {
 	/**
 	 * 
 	 * @param digitCount
-	 * @return String
+	 * @return {@link String}
 	 */
 	public static final String generateRandomNumber(int digitCount) {
 		long min = (long) Math.pow(10, digitCount - 1);
 		return String.valueOf(ThreadLocalRandom.current().nextLong(min, min * 10));
 	}
 
+	/**
+	 * 
+	 * @param <E>
+	 * @param lst
+	 * @return
+	 */
 	public static final <E> boolean isListNotEmpty(List<E> lst) {
 		return !isListEmpty(lst);
 	}
 
+	/**
+	 * 
+	 * @param <E>
+	 * @param lst
+	 * @return
+	 */
 	public static <E> boolean isListEmpty(List<E> lst) {
-		// TODO Auto-generated method stub
 		return (lst == null || lst.isEmpty());
 	}
 
+	/**
+	 * 
+	 * @param <K>
+	 * @param <V>
+	 * @param map
+	 * @return
+	 */
 	public static final <K, V> boolean isMapEmpty(Map<K, V> map) {
 		return map == null || map.isEmpty();
 	}
 
+	/**
+	 * 
+	 * @param <K>
+	 * @param <V>
+	 * @param map
+	 * @return
+	 */
 	public static final <K, V> boolean isMapNotEmpty(Map<K, V> map) {
 		return !isMapEmpty(map);
 	}
 
+	/**
+	 * 
+	 * @param stringValue
+	 * @return
+	 */
 	public static final String returnValue(String stringValue) {
 		return stringValue == null ? null : stringValue.trim().isEmpty() ? null : stringValue.trim();
 	}
 
+	/**
+	 * 
+	 * @param objectValue
+	 * @return
+	 */
 	public static final Object returnValue(Object objectValue) {
 		return (objectValue == null || objectValue == "") ? null : objectValue;
 	}
 
+	/**
+	 * 
+	 * @param objectValue
+	 * @return
+	 */
 	public static final boolean isNotNull(Object objectValue) {
 		return returnValue(objectValue) != null;
 	}
 
+	/**
+	 * 
+	 * @param objectValue
+	 * @return
+	 */
 	public static final boolean isNull(Object objectValue) {
 		return !isNotNull(objectValue);
 	}
@@ -95,6 +135,11 @@ public final class CommonUtils {
 		return returnValue(stringValue) != null;
 	}
 
+	/**
+	 * 
+	 * @param stringValue
+	 * @return
+	 */
 	public static final boolean isNull(String stringValue) {
 		return !isNotNull(stringValue);
 	}
@@ -110,6 +155,13 @@ public final class CommonUtils {
 		return isListNotEmpty(actual) && isListNotEmpty(expected) && actual.equals(expected);
 	}
 
+	/**
+	 * 
+	 * @param <E>
+	 * @param actual
+	 * @param expected
+	 * @return
+	 */
 	public static final <E> boolean compareContainsAll(List<E> actual, List<E> expected) {
 		return isListNotEmpty(actual) && isListNotEmpty(expected) && actual.containsAll(expected);
 	}
@@ -126,36 +178,57 @@ public final class CommonUtils {
 				&& containsString.stream().anyMatch(stringContains::contains);
 	}
 
+	/**
+	 * 
+	 * @param stringContains
+	 * @param containsString
+	 * @return
+	 */
 	public static final boolean compareContains(String stringContains, String containsString) {
 		return isNotNull(stringContains) && isNotNull(containsString) && stringContains.contains(containsString);
 	}
 
+	/**
+	 * 
+	 * @param stringContains
+	 * @param containsString
+	 * @return
+	 */
 	public static final boolean compareContains(List<String> stringContains, String containsString) {
 		return isListNotEmpty(stringContains) && isNotNull(containsString) && stringContains.contains(containsString);
 	}
 
+	/**
+	 * 
+	 * @param object1
+	 * @param object2
+	 * @return
+	 */
 	public static final boolean compareEquals(Object object1, Object object2) {
 		return isNotNull(object1) && isNotNull(object2) && object1 == object2;
 	}
 
+	/**
+	 * 
+	 * @param <K>
+	 * @param <V>
+	 * @param map1
+	 * @param map2
+	 * @return
+	 */
 	public static final <K, V> boolean compareEquals(Map<K, V> map1, Map<K, V> map2) {
 		return isMapNotEmpty(map1) && isMapNotEmpty(map2) && map1.equals(map2);
 	}
 
+	/**
+	 * 
+	 * @param string1
+	 * @param string2
+	 * @return
+	 */
 	public static final boolean compareEqualsIgnoreCase(String string1, String string2) {
 		return isNotNull(string1) && isNotNull(string2) && string1.equalsIgnoreCase(string2);
 	}
-
-//	public static final int compareCompareIgnoreCase(String string1, String string2) {
-//		return isNotNull(string1) && isNotNull(string2) && string1.compareToIgnoreCase(string2);
-//	}
-	/**
-	 * 
-	 * @param <E>
-	 * @param actual
-	 * @param expected
-	 * @return boolean
-	 */
 
 	/**
 	 * 
@@ -185,7 +258,7 @@ public final class CommonUtils {
 	 * 
 	 * @param filePath1
 	 * @param filePath2
-	 * @return boolean
+	 * @return {@link Boolean}
 	 */
 	public static final boolean compareImages(String filePath1, String filePath2) {
 		try {
@@ -208,6 +281,11 @@ public final class CommonUtils {
 		}
 	}
 
+	/**
+	 * 
+	 * @param string
+	 * @return
+	 */
 	public static final List<String> getListOfCommaSaperatedWords(String string) {
 		return isNotNull(string) ? Arrays.asList(string.split(",")) : SystemData.EMPTY_LIST_OF_TYPE_STRING;
 	}
@@ -216,20 +294,12 @@ public final class CommonUtils {
 	 * 
 	 * @param inputString
 	 * @param specialChar
-	 * @return List<String>
+	 * @return {@link List}
 	 */
 	public static final List<String> getListOfSpecialCharacterSaperatedWords(String inputString, String specialChar) {
-		return isNotNull(inputString) ? Arrays.asList(inputString.split(specialChar)) : SystemData.EMPTY_LIST_OF_TYPE_STRING;
+		return isNotNull(inputString) ? Arrays.asList(inputString.split(specialChar))
+				: SystemData.EMPTY_LIST_OF_TYPE_STRING;
 	}
-
-	/**
-	 * 
-	 * @param inputString
-	 * @return
-	 */
-//	public static final List<String> getListOfCommaSaperatedWords(String inputString) {
-//		return getListOfSpecialCharacterSaperatedWords(inputString, ",");
-//	}
 
 	/**
 	 * 
@@ -286,11 +356,6 @@ public final class CommonUtils {
 		return map.keySet().stream()
 				.map(key -> replaceAllCharWithOtherChar(inputString, key, String.format("\"%s\"", map.get(key))))
 				.collect(Collectors.joining("", "{\"", "\"}"));
-		/*
-		 * for (String key : map.keySet()) { inputString =
-		 * replaceAllCharWithOtherChar(inputString, key, String.format("\"%s\"",
-		 * map.get(key))); } return "{\"" + inputString + "\"}";
-		 */
 	}
 
 	/**
@@ -301,26 +366,13 @@ public final class CommonUtils {
 	public static final String mapToJsonString(final Map<String, String> map) {
 		return map.keySet().stream().map(key -> String.format("\"%s\":\"%s\"", key, map.get(key)))
 				.collect(Collectors.joining(",", "{", "}"));
-		/*
-		 * String jsonString = "{"; List<String> lst = new ArrayList<>(map.keySet());
-		 * int lstSize = lst.size(); for (int i = 0; i < lstSize; i++) { jsonString =
-		 * jsonString + String.format("\"%s\":\"%s\"", lst.get(i), map.get(lst.get(i)));
-		 * jsonString = i < (lstSize - 1) ? jsonString + "," : jsonString + "}"; }
-		 * return jsonString;
-		 */
 	}
 
 	/**
 	 * 
-	 * @param inputString
-	 * @return String
+	 * @param jsonString
+	 * @return {@link Map}
 	 */
-	/*
-	 * public static final String returnValue(String inputString) { return
-	 * inputString == null ? null : inputString.trim().length() == 0 ? null :
-	 * inputString.trim(); }
-	 */
-
 	public static final Map<String, String> jsonStringToMap(String jsonString) {
 		Map<String, String> map = new HashMap<String, String>();
 		if (jsonString.startsWith("{")) {
@@ -362,30 +414,61 @@ public final class CommonUtils {
 		return mergerMap;
 	}
 
+	/**
+	 * 
+	 * @param string
+	 * @return
+	 */
 	public static final List<String> splitStringBasedOnDot(String string) {
 		return Arrays.asList(string.split("\\."));
 	}
 
+	/**
+	 * 
+	 * @param encodedQuery
+	 * @param key
+	 * @param operator
+	 * @param values
+	 * @return {@link String}
+	 */
 	public static final String formAndEncodedQuery(String encodedQuery, String key, String operator,
 			List<String> values) {
 		String encQuery = returnValue(values.stream().filter(Objects::nonNull)
 				.map(value -> String.format("%s%s%s", key, operator, value)).collect(Collectors.joining("^")));
 		return isNotNull(encodedQuery) ? encodedQuery + "^" + encQuery : encQuery;
 	}
-	
-	public static final String formAndEncodedQuery(String key, String operator,
-			List<String> values) {
+
+	/**
+	 * 
+	 * @param key
+	 * @param operator
+	 * @param values
+	 * @return {@link String}
+	 */
+	public static final String formAndEncodedQuery(String key, String operator, List<String> values) {
 		return formAndEncodedQuery(null, key, operator, values);
 	}
-	
-	
+
+	/**
+	 * 
+	 * @param encodedQuery
+	 * @param operator
+	 * @param mapVal
+	 * @return
+	 */
 	public static final String formAndEncodedQuery(String encodedQuery, String operator, Map<String, String> mapVal) {
 		String encQuery = returnValue(mapVal.keySet().stream().filter(Objects::nonNull)
 				.map(key -> String.format("%s%s%s", key, operator, mapVal.get(key))).collect(Collectors.joining("^")));
 		return isNotNull(encodedQuery) ? encodedQuery + "^" + encQuery : encQuery;
 	}
-	
-	public static final String formAndEncodedQuery( String operator, Map<String, String> mapVal) {
+
+	/**
+	 * 
+	 * @param operator
+	 * @param mapVal
+	 * @return
+	 */
+	public static final String formAndEncodedQuery(String operator, Map<String, String> mapVal) {
 		return formAndEncodedQuery(null, operator, mapVal);
 	}
 }

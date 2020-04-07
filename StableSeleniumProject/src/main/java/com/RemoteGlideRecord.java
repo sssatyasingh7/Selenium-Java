@@ -36,25 +36,25 @@ public interface RemoteGlideRecord {
 
 	/**
 	 * 
-	 * @return
+	 * @return {@link String}
 	 */
 	public String getValue(String fieldKey);
 
 	/**
 	 * 
-	 * @return
+	 * @return {@link String}
 	 */
 	public String getDisplayValue(String fieldKey);
 
 	/**
 	 * 
-	 * @return
+	 * @return {@link List}
 	 */
 	public List<String> getListOfValue(String fieldKey);
 
 	/**
 	 * 
-	 * @return
+	 * @return {@link List}
 	 */
 	public List<String> getListOfDisplayValue(String fieldKey);
 
@@ -65,21 +65,57 @@ public interface RemoteGlideRecord {
 	 */
 	public void update(String encodedQuery, String recordSysId);
 
+	/**
+	 * 
+	 * @param fieldKey
+	 */
 	public void addNotNull(String fieldKey);
 	
+	/**
+	 * 
+	 * @param fieldKey
+	 */
 	public void addNull(String fieldKey);
 	
+	/**
+	 * 
+	 * @param count
+	 */
 	public void setLimit(int count);
 	
+	/**
+	 * 
+	 */
 	public void next();
 	
+	/**
+	 * 
+	 * @return {@link Integer}
+	 */
 	public int getRecordCount();
 	
+	/**
+	 * 
+	 * @return {@link String}
+	 */
 	public String getSysId();
 	
+	/**
+	 * 
+	 * @param recordSysId
+	 * @param encodedQuery
+	 */
 	public void updateListOfRecords(List<String> recordSysId, String encodedQuery);
 	
+	/**
+	 * 
+	 * @param recordSysId
+	 */
 	public void deleteRecord(String recordSysId);
 	
+	/**
+	 * 
+	 * @param recordSysId
+	 */
 	public void deleteListOfRecords(List<String> recordSysId);
 }

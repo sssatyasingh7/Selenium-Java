@@ -1,6 +1,5 @@
 package com;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -173,13 +172,13 @@ public enum RestUtils {
  	 * 
  	 * @param response
  	 * @param fieldPath
- 	 * @return List<String>
+ 	 * @return {@link List}
  	 */
  	public final List<String> getListOfValueFromJSONResponse(Response response, String fieldPath) {
  		return (response != null)
  				? new JsonPath(response.asString()).getList(fieldPath, String.class).stream()
  						.map(CommonUtils::returnValue).filter(Objects::nonNull).collect(Collectors.toList())
- 				: new ArrayList<>();
+ 				: SystemData.EMPTY_LIST_OF_TYPE_STRING;
  	}
 
  	/**

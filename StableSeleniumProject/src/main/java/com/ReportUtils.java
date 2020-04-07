@@ -30,6 +30,9 @@ public final class ReportUtils {
 
 	private static final String REPORT_NAME = "";
 
+	/**
+	 * return {@link ReportUtils}
+	 */
 	private ReportUtils() {
 		FileHelperUtils.createFolder(REPORT_DIR_PATH);
 		ExtentHtmlReporter htmlReporter = new ExtentHtmlReporter(
@@ -44,16 +47,26 @@ public final class ReportUtils {
 		reportFlush();
 	}
 
+	/**
+	 * 
+	 */
 	private static final void reportFlush() {
 		if (REPORT_INSTANCE != null) {
 			REPORT_INSTANCE.flush();
 		}
 	}
 
+	/**
+	 * 
+	 * @return {@link ReportUtils}
+	 */
 	public static final ReportUtils getInstance() {
 		return (REPORT_UTILS == null) ? (REPORT_UTILS = new ReportUtils()) : REPORT_UTILS;
 	}
 
+	/**
+	 * 
+	 */
 	public final void createTestLogger() {
 		if (REPORT_INSTANCE != null) {
 			for (StackTraceElement str : Arrays.asList(Thread.currentThread().getStackTrace())) {
@@ -74,9 +87,13 @@ public final class ReportUtils {
 		}
 	}
 
+	/**
+	 * 
+	 * @return {@link MediaEntityModelProvider}
+	 */
 	private static final MediaEntityModelProvider getMediaEntityBuilderInstance() {
 		try {
-			// SELENIUM_UTILS.captureScreenshot();
+			// SeleniumUtils.captureScreenshot();
 			return MediaEntityBuilder
 					.createScreenCaptureFromBase64String(
 							DatatypeConverter.printBase64Binary(CommonUtils.convertScreenshotTo64Bits(SCREENSHOT_PATH)))
@@ -86,12 +103,22 @@ public final class ReportUtils {
 		}
 	}
 
+	/**
+	 * 
+	 * @param message
+	 * @return {@link String}
+	 */
 	private static final String messageFormatter(String message) {
 		message = message.replaceAll("\n", "<br>&nbsp;&nbsp;&nbsp;&#10146;</b>&nbsp;&nbsp;");
 		message = message.replaceAll(">>>", "<br>");
 		return message.replaceAll(">>", "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#10159;</b>&nbsp;&nbsp;");
 	}
 
+	/**
+	 * 
+	 * @param messages
+	 * @return {@link String}
+	 */
 	private static final String messageFormatter(List<String> messages) {
 		String message = messages.get(0);
 		for (int i = 1; i < messages.size() - 1; i++) {
@@ -101,10 +128,19 @@ public final class ReportUtils {
 		return message.replaceAll("\n", "<br>&nbsp;&nbsp;&nbsp;&#10146;</b>&nbsp;&nbsp;");
 	}
 
+	/**
+	 * 
+	 * @param message
+	 */
 	private static final void writeLogsToLoggerFile(String message) {
 		TextUtils.writeToTextFile(LOGGER_TEST_FILE_PATH, "\n \n" + message);
 	}
 
+	/**
+	 * 
+	 * @param message
+	 * @param isScreenshot
+	 */
 	private final void setInfoLogs(String message, boolean isScreenshot) {
 		if (LOGGER != null && message != null) {
 			if (isScreenshot) {
@@ -118,6 +154,10 @@ public final class ReportUtils {
 		writeLogsToLoggerFile("*** STATUS.INFO::\n" + message + "\n***");
 	}
 
+	/**
+	 * 
+	 * @param message
+	 */
 	private final void setInfoLogs(List<String> message) {
 		if (LOGGER != null && !message.isEmpty()) {
 			LOGGER.log(Status.INFO, "<font color='Sienna'> &#10158; " + messageFormatter(message) + "</font>");
@@ -126,6 +166,13 @@ public final class ReportUtils {
 		writeLogsToLoggerFile("*** STATUS.INFO::\n" + message + "\n***");
 	}
 
+	/**
+	 * 
+	 * @param message
+	 * @param actual
+	 * @param expected
+	 * @param isScreenshot
+	 */
 	private final void setPassLogs(String message, Object actual, Object expected, boolean isScreenshot) {
 		if (LOGGER != null) {
 			if ((actual == null || actual == "") && (expected == null || expected == "")) {
@@ -158,6 +205,14 @@ public final class ReportUtils {
 				+ expected + "\n***\n");
 	}
 
+	/**
+	 * 
+	 * @param <E>
+	 * @param message
+	 * @param actual
+	 * @param expected
+	 * @param isScreenshot
+	 */
 	private final <E> void setPassLogs(String message, List<E> actual, List<E> expected, boolean isScreenshot) {
 		if (LOGGER != null) {
 			if (actual.isEmpty() && expected.isEmpty()) {
@@ -190,6 +245,13 @@ public final class ReportUtils {
 				+ expected + "\n***\n");
 	}
 
+	/**
+	 * 
+	 * @param message
+	 * @param actual
+	 * @param expected
+	 * @param isScreenshot
+	 */
 	private final void setFailLogs(String message, Object actual, Object expected, boolean isScreenshot) {
 		if (LOGGER != null) {
 			if ((actual == null || actual == "") && (expected == null || expected == "")) {
@@ -222,6 +284,14 @@ public final class ReportUtils {
 				+ expected + "\n***\n");
 	}
 
+	/**
+	 * 
+	 * @param <E>
+	 * @param message
+	 * @param actual
+	 * @param expected
+	 * @param isScreenshot
+	 */
 	private final <E> void setFailLogs(String message, List<E> actual, List<E> expected, boolean isScreenshot) {
 		if (LOGGER != null) {
 			if (actual.isEmpty() && expected.isEmpty()) {
@@ -254,6 +324,11 @@ public final class ReportUtils {
 				+ expected + "\n***\n");
 	}
 
+	/**
+	 * 
+	 * @param errors
+	 * @param isScreenshot
+	 */
 	public final void setErrorLogs(List<String> errors, boolean isScreenshot) {
 		if (LOGGER != null && errors.size() > 0) {
 			if (isScreenshot) {
@@ -271,18 +346,46 @@ public final class ReportUtils {
 		writeLogsToLoggerFile("*** ERROR.LOGS::\n" + errors + "\n***\n");
 	}
 
+	/**
+	 * 
+	 * @param methodName
+	 * @param message
+	 * @return {@link String}
+	 */
 	private final String formMessage(Object methodName, Object message) {
 		return methodName + " Operation " + message;
 	}
 
+	/**
+	 * 
+	 * @param methodName
+	 * @param message
+	 * @param actual
+	 * @param expected
+	 */
 	public final void assertPass(final String methodName, Object message, Object actual, Object expected) {
 		setPassLogs(formMessage(methodName, message), actual, expected, false);
 	}
 
+	/**
+	 * 
+	 * @param <E>
+	 * @param methodName
+	 * @param message
+	 * @param actual
+	 * @param expected
+	 */
 	public final <E> void assertPass(final String methodName, Object message, List<E> actual, List<E> expected) {
 		setPassLogs(formMessage(methodName, message), actual, expected, false);
 	}
 
+	/**
+	 * 
+	 * @param methodName
+	 * @param message
+	 * @param actual
+	 * @param expected
+	 */
 	public final void assertFail(final String methodName, String message, Object actual, Object expected) {
 		message = formMessage(methodName, message);
 		setFailLogs(message, actual, expected, true);
@@ -292,6 +395,14 @@ public final class ReportUtils {
 			Assert.fail(message + "\nAct. Val. is:: " + actual + "\nExp. Val. is:: " + expected);
 	}
 
+	/**
+	 * 
+	 * @param <E>
+	 * @param methodName
+	 * @param message
+	 * @param actual
+	 * @param expected
+	 */
 	public final <E> void assertFail(final String methodName, String message, List<E> actual, List<E> expected) {
 		message = formMessage(methodName, message);
 		setFailLogs(message, actual, expected, true);
@@ -301,18 +412,48 @@ public final class ReportUtils {
 			Assert.fail(message + "\nAct. Val. is:: " + actual + "\nExp. Val. is:: " + expected);
 	}
 
+	/**
+	 * 
+	 * @param methodName
+	 * @param message
+	 * @param actual
+	 * @param expected
+	 */
 	public final void verifyPass(final String methodName, Object message, Object actual, Object expected) {
 		setPassLogs(formMessage(methodName, message), actual, expected, false);
 	}
 
+	/**
+	 * 
+	 * @param <E>
+	 * @param methodName
+	 * @param message
+	 * @param actual
+	 * @param expected
+	 */
 	public final <E> void verifyPass(final String methodName, Object message, List<E> actual, List<E> expected) {
 		setPassLogs(formMessage(methodName, message), actual, expected, false);
 	}
 
+	/**
+	 * 
+	 * @param methodName
+	 * @param message
+	 * @param actual
+	 * @param expected
+	 */
 	public final void verifyFail(final String methodName, String message, Object actual, Object expected) {
 		setFailLogs(formMessage(methodName, message), actual, expected, true);
 	}
 
+	/**
+	 * 
+	 * @param <E>
+	 * @param methodName
+	 * @param message
+	 * @param actual
+	 * @param expected
+	 */
 	public final <E> void verifyFail(final String methodName, String message, List<E> actual, List<E> expected) {
 		setFailLogs(formMessage(methodName, message), actual, expected, true);
 	}

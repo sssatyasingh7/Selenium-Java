@@ -10,6 +10,10 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 enum Initializer {
 	INSTANCE;
 
+	/**
+	 * 
+	 * @return {@link WebDriver}
+	 */
 	static WebDriver getDriverInstance() {
 		WebDriver driver = null;
 		TestEnvironment testEnv = TestEnvironment.INSTANCE;

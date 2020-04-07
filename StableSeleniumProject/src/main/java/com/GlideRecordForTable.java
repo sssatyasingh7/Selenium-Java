@@ -17,6 +17,11 @@ class GlideRecordForTable implements RemoteGlideRecord {
 
 	private static final RestForSNOW rest = new RestForSNOW();
 
+	/**
+	 * 
+	 * @param tableName
+	 * @return {@link GlideRecordForTable}
+	 */
 	GlideRecordForTable(String tableName) {
 		this.TABLE_NAME = tableName;
 		this.API_URL = String.format("%s?sysparm_display_value=all", tableName);
